@@ -31,7 +31,7 @@
   <!-- <div id="sidebar" style="width:0px;">
     <a href="/omegaball/Live.php">LIVE GAMES</a><br>
     <a href="/omegaball/League">LEAGUE</a><br>
-    <a href="/omegaball/Store">STORE</a><br>
+    <a href="/omegaball/Vote">VOTE</a><br>
     <a href="/omegaball/Rules">RULES</a><br>
     <a href="/omegaball/Vote">VOTE</a><br>
     <a href="#" onClick="sidebar_close()">CLOSE</a><br>
@@ -40,7 +40,7 @@
 <div id="links" class="links">
   <a href="/omegaball/live">LIVE</a>
   <a href="/omegaball/league">LEAGUE</a>
-  <a href="/omegaball/store">STORE</a>
+  <a href="/omegaball/vote">VOTE</a>
   <a href="/omegaball/rules">RULES</a>
   <a href="/omegaball/console">CONSOLE</a>
 </div>
