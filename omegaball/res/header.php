@@ -45,6 +45,7 @@
   <a href="/omegaball/league">LEAGUE</a>
   <a href="/omegaball/store">STORE</a>
   <a href="/omegaball/rules">RULES</a>
+  <a href="/omegaball/console">CONSOLE</a>
   <?php
     if(isset($currentUser) && $currentUser != null) {
       echo '<a href="/omegaball/account">ACCOUNT</a>';
