@@ -3,21 +3,20 @@
   require_once realpath($_SERVER["DOCUMENT_ROOT"])."/res/lib.php";
 
 
+  /**
+   * Generates a random float between 0 (inclusive) and 1 (exclusive).
+   *
+   * @return float
+   */
   function random() {
     return (float)rand() / (float)getrandmax();
-  }
-
-  function getTeam($args) {
-    global $data;
-
-    if( array_key_exists("playerIndex", $args) ) {
-
-    }
   }
 
 
   /**
    * Creates the display name of the player given
+   *
+   * @todo Update this function to work with new global data object
    *
    * @param player
    * @param noExtra prevent extra information from being shown, such as when a
@@ -148,8 +147,4 @@
 
     return $multiQueryStr;
   }
-
-  // function getDisplayName($player, $noExtra=false) {
-  //   return getPlayerDisplayName( $player, $noExtra );
-  // }
 ?>

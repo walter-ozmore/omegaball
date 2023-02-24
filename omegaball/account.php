@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Account | Omegaball</title>
+    <title>Account</title>
     <?php
       require_once realpath($_SERVER["DOCUMENT_ROOT"])."/account/newlib.php";
 

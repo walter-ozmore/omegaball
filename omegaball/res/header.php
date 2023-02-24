@@ -1,8 +1,5 @@
 <?php
   require_once realpath($_SERVER["DOCUMENT_ROOT"])."/res/lib.php";
-
-  // Remove due to git
-  // require_once realpath($_SERVER["DOCUMENT_ROOT"])."/account/newlib.php";
 ?>
 
 <script>
@@ -46,9 +43,4 @@
   <a href="/omegaball/store">STORE</a>
   <a href="/omegaball/rules">RULES</a>
   <a href="/omegaball/console">CONSOLE</a>
-  <?php
-    if(isset($currentUser) && $currentUser != null) {
-      echo '<a href="/omegaball/account">ACCOUNT</a>';
-    }
-  ?>
 </div>

@@ -4,7 +4,7 @@
 
   $returnObj = [];
 
-  $conn = connectDB("omegaball");
+  $conn = connectDB("newOmegaball");
 
   $league = ( isset($_GET["league"]) )? $_GET["league"] : "The Alphaleague";
   $query = "SELECT * FROM Team WHERE league='$league'";

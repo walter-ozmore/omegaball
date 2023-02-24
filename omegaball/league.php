@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Omegaball || League</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0">
+    <title>League</title>
+    <?php require_once realpath($_SERVER["DOCUMENT_ROOT"])."/omegaball/res/head.php"; ?>
 
     <!-- Style sheets -->
-    <link rel="stylesheet" href="/omegaball/res/master.css">
     <style>
       h3 {
         margin-bottom: 0px;
@@ -18,7 +17,6 @@
 
       .grid-container div {
         padding: .5em;
-        /* display: none; */
       }
 
 
@@ -39,7 +37,6 @@
     </style>
 
     <!-- Scripts -->
-    <script src="/omegaball/res/lib.js"></script>
     <script src="/omegaball/scripts/league.js"></script>
   </head>
 

@@ -162,7 +162,6 @@ function getStatString(str, player, substats = []) {
 
     avg += parseFloat( player[ substatName ] );
     amount += 1;
-    console.log(name);
   }
 
   if( amount == 0 ) return str + "NULL";
@@ -170,8 +169,6 @@ function getStatString(str, player, substats = []) {
   avg = avg / amount;
 
   avg *= 5;
-  // str += floor( avg );
-  console.log(avg);
 
   for(let x=1;x<=avg;x++)
     str += "*";

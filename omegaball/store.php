@@ -1,18 +1,16 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Omegaball || Store</title>
+  <head>
+    <title>Store</title>
     <?php
-      require_once realpath($_SERVER["DOCUMENT_ROOT"])."/res/secure/database.php";
-      require_once realpath($_SERVER["DOCUMENT_ROOT"])."/res/lib.php";
+      require_once realpath($_SERVER["DOCUMENT_ROOT"])."/omegaball/res/head.php";
     ?>
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0">
-
-    <link rel="stylesheet" href="/omegaball/res/master.css">
-    </head>
+  </head>
 
   <header>
-    <?php require realpath($_SERVER["DOCUMENT_ROOT"])."/omegaball/res/header.php"; ?>
+    <?php
+      require realpath($_SERVER["DOCUMENT_ROOT"])."/omegaball/res/header.php";
+    ?>
   </header>
 
   <body>

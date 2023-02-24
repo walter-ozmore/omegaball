@@ -1,16 +1,11 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Omegaball || Live</title>
+    <title>Live</title>
     <?php
-      require_once realpath($_SERVER["DOCUMENT_ROOT"])."/res/secure/database.php";
-      require_once realpath($_SERVER["DOCUMENT_ROOT"])."/res/lib.php";
+      require_once realpath($_SERVER["DOCUMENT_ROOT"])."/omegaball/res/head.php";
     ?>
 
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0">
-    <title>LIVE | OMEGABALL</title>
-
-    <link rel="stylesheet" href="/omegaball/res/master.css">
     <style>
       .teams {
         display: grid;
@@ -65,7 +60,6 @@
       .dropdown:hover {background-color: rgba(255, 255, 255, .1);}
     </style>
 
-    <script src="/omegaball/res/lib.js"></script>
     <script>
       function run() {
         document.getElementById("controller").style.display = "none";
@@ -155,7 +149,6 @@
             console.log( teamData.teamColor + " => "+dim )
             player.style.color = dim;
             player.style.textDecoration = 'line-through';
-            // console.log("Player out: " + playerData.playerName)
           }
 
           let extra = "";
@@ -169,14 +162,16 @@
         }
 
         teamsDiv.appendChild( team );
-        // console.log("Job Done");
       }
     </script>
 
     <?php
       function createSelector($id) {
+        require_once realpath($_SERVER["DOCUMENT_ROOT"])."/res/secure/database.php";
+        require_once realpath($_SERVER["DOCUMENT_ROOT"])."/res/lib.php";
+
         echo "<select id='$id'>";
-        $conn = connectDB("omegaball");
+        $conn = connectDB("newOmegaball");
         $query = "SELECT teamName FROM Team WHERE league='The Alphaleague'";
         $result = runQuery($conn, $query);
         while ($row = $result->fetch_assoc()) {
@@ -189,7 +184,9 @@
   </head>
 
   <header>
-    <?php require realpath($_SERVER["DOCUMENT_ROOT"])."/omegaball/res/header.php"; ?>
+    <?php
+      require realpath($_SERVER["DOCUMENT_ROOT"])."/omegaball/res/header.php";
+    ?>
   </header>
 
   <body>

@@ -7,7 +7,7 @@
   }
 
   $superQuery = "";
-  $conn = connectDB("omegaball");
+  $conn = connectDB("newOmegaball");
   $query = "SELECT * FROM Player";
   $result = runQuery($conn, $query);
   while ($row = $result->fetch_assoc()) {

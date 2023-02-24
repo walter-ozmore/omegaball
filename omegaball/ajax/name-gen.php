@@ -2,7 +2,7 @@
   require_once realpath($_SERVER["DOCUMENT_ROOT"])."/res/secure/database.php";
   require_once realpath($_SERVER["DOCUMENT_ROOT"])."/res/lib.php";
 
-  $conn = connectDB("omegaball");
+  $conn = connectDB("newOmegaball");
   $query = "SELECT playerName FROM PlayerNames WHERE position= -1 OR position= 1 ORDER BY RAND() LIMIT 5";
   $result = runQuery($conn, $query);
   $firstName = [];
