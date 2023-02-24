@@ -1,43 +1,6 @@
 <?php
   require_once realpath($_SERVER["DOCUMENT_ROOT"])."/omegaball/res/lib.php";
-  require_once realpath($_SERVER["DOCUMENT_ROOT"])."/omegaball/simulation/actions.php";
-
-  /**
-   * Creates the display name of the player given
-   *
-   * @param player
-   * @param noExtra prevent extra information from being shown, such as when a
-   * player is out of the game they are crossed out
-   */
-  function getDisplayPlayerName($playerObj, $noExtra=false) {
-    $teamObj = getTeam( ["playerIndex"=>$playerObj["playerName"]] );
-
-    $playerName = $playerObj["playerName"];
-    $teamColor = $teamObj["teamColor"];
-    $extra = ($playerObj["inGame"] || $noExtra)? "" : "text-decoration: line-through white;";
-    $displayName = "<span style='color: $teamColor;$extra'>$playerName</span>";
-
-    return $displayName;
-  }
-
-
-  function getPlayer($playerID) {
-    global $data;
-
-    foreach( $data["teams"] as $team ) {
-      foreach( $team["players"] as $playerIndex => $player ) {
-        if( is_string( $playerIndex ) ) {
-          // String
-          if( strcmp($playerIndex,  $playerID) == 0)
-            return $player;
-        } else {
-          // Number
-          if( $playerIndex == $playerID )
-            return $player;
-        }
-      }
-    }
-  }
+  // require_once realpath($_SERVER["DOCUMENT_ROOT"])."/omegaball/simulation/actions.php";
 
   function isGameDone() {
     return false;
@@ -50,6 +13,8 @@
 
     // Add players to the action queue by speed
     $speedLimit = 1;
+
+    // We set a maximum here to prevent infinite loops
     for($x=0;$x<1000;$x++) {
       if($verbos) echo "Loop Start<br>";
       $highestSpeedPlayerObj = null;
@@ -100,9 +65,10 @@
   function runGame() {
     global $data, $gameRunning;
     $gameRunning = true;
+    $maxTurns = 2;
 
     // Loop for a maximum of 30 turns, just incase of a infinite loop
-    for($turnCounter = 0; $turnCounter < 10 && $gameRunning; $turnCounter++) {
+    for($turnCounter = 0; $turnCounter < $maxTurns && $gameRunning; $turnCounter++) {
       // Create the order of 'turns'
       $actionQueue = createActionQueue();
 
@@ -116,14 +82,18 @@
     global $gameRunning, $data;
 
     // Check if the game is over before continuing
-    if(isGameDone()) return;
+    if(isGameDone()) {
+      $gameRunning = false;
+      return;
+    }
 
     // Assume only players will be in the queue for now, this should be
     // changed later
     $playerID = $action;
     $playerObj = getPlayer($playerID);
 
-    echo $playerObj["hustle"] . " " . $playerObj["playerName"] ." is taking their turn!<br>";
+    $displayName = getPlayerDisplayName( $playerObj );
+    echo $playerObj["hustle"] . " $displayName is taking their turn!<br>";
 
     // Player makes a choice
 
@@ -148,7 +118,7 @@
   }
 
   /****************************************************************************
-   * Driver code goes here                                                    *
+   * Driver code goes here
    ****************************************************************************/
 
   // Load teams in to our data

@@ -14,21 +14,73 @@
 
 
   /**
-   * Creates the display name of the player given
+   * Gets the player that has a primary key of the argument from the global data array.
    *
-   * @todo Update this function to work with new global data object
+   * @param mixed $playerID The primary key of the player
+   *
+   * @return array An array containing the details of the
+   * player
+   */
+  function getPlayer($playerID) {
+    global $data;
+
+    foreach( $data["teams"] as $team )
+      foreach( $team["players"] as $playerIndex => $player )
+        if( compare($playerIndex, $playerID) )
+          return $player;
+  }
+
+  /**
+   * Gets the team array that matches the given arguments
+   * from the global data array.
+   *
+   * @param array $args The data that relates the team
+   *
+   * @return array An array containing the details of the team
+   */
+  function getTeam($args) {
+    global $data;
+
+    if( array_key_exists("playerIndex", $args) ) {
+      $playerID = $args["playerIndex"];
+
+      foreach( $data["teams"] as $team )
+        foreach( $team["players"] as $playerIndex => $player )
+          if( compare($playerIndex, $playerID) )
+            return $team;
+    }
+  }
+
+
+  /**
+   * Compare two values $a and $b
+   *
+   * @param mixed $a First value to compare
+   * @param mixed $b Second value to compare
+   *
+   * @return bool true if the values are equal
+   */
+  function compare($a, $b) {
+    if( is_string( $a ) ) // String
+      return strcmp($a,  $b) == 0;
+    else // Number
+      return $a == $b;
+  }
+
+
+  /**
+   * Creates the display name of the player given
    *
    * @param player
    * @param noExtra prevent extra information from being shown, such as when a
    * player is out of the game they are crossed out
    */
-  function getPlayerDisplayName($player, $noExtra=false) {
-    $player = getPlayerFromId( $player );
-    $team = getTeamFromPlayerId( $player );
+  function getPlayerDisplayName($playerObj, $noExtra=false) {
+    $teamObj = getTeam( ["playerIndex"=>$playerObj["playerName"]] );
 
-    $playerName = $player["playerName"];
-    $teamColor = $team["teamColor"];
-    $extra = ($player["inGame"] || $noExtra)? "" : "text-decoration: line-through white;";
+    $playerName = $playerObj["playerName"];
+    $teamColor = $teamObj["teamColor"];
+    $extra = ( !array_key_exists("inGame", $playerObj) || $playerObj["inGame"] || $noExtra)? "" : "text-decoration: line-through white;";
     $displayName = "<span style='color: $teamColor;$extra'>$playerName</span>";
 
     return $displayName;
