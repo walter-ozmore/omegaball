@@ -1,0 +1,225 @@
+/* ---- START GLOBAL ---- */
+@font-face {
+    font-family: SpaceMono-Regular;
+    src: url(fonts/SpaceMono-Regular.ttf);
+}
+
+* {
+  font-family: SpaceMono-Regular;
+}
+
+p, ol, ul, li{
+  font-size: 14px;
+}
+
+body {
+  max-width: 95%;
+  margin: 0 auto 0 auto;
+  padding: 0px;
+  background-color: black;
+  color: white;
+  font-size: 14px;
+}
+
+ol {
+  background-color: black;
+  color: white;
+  font-size: 14px;
+}
+
+p, li {
+  margin: 0em;
+  padding: 0em;
+}
+
+input {
+  background-color: rgba(0, 0, 0, 0);
+  color: white;
+}
+
+h1, h2, h3, h4 {
+  width: fit-content;
+}
+
+a {
+  color: white;
+  text-decoration: none;
+}
+
+header {
+  border-bottom: solid;
+  border-color: gray;
+}
+
+h1 {
+  font-size: 5em;
+  width: fit-content;
+  padding-bottom: 0px;
+  margin: 0 auto 0 auto;
+}
+
+button {
+  background-color: #FFFFFF;
+  color: black;
+  border: none;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* ---- END GLOBAL ---- */
+
+/* ---- START DEFAULT ---- */
+
+.border {
+  border: 3px solid #ffffff;
+}
+
+.notification {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 30em;
+  max-width: 30em;
+
+  background-color: black;
+
+  border: 10px solid black;
+
+  padding: 1em;
+  text-align: center;
+}
+
+/* Inside border */
+.notification:before {
+  content: " ";
+  position: absolute;
+  z-index: -1;
+  top: 1px;
+  left: 1px;
+  right: 1px;
+  bottom: 1px;
+  border: 3px solid #ffffff;
+}
+.notification p {
+  margin-bottom: 1em;
+}
+.notification img {
+  max-width: 5em;
+}
+
+.selected {
+  background-color: white;
+  color: black;
+}
+
+/* Header Sec */
+.title {
+  width: fit-content;
+  padding-top: 1.5em;
+  margin: 0 auto 1.5em auto;
+}
+
+.title img {
+    max-width: min(450px, 100vw);
+    min-width: 40vw;
+}
+
+.sub {
+    font-size: min(18px, 2.5vw);
+}
+
+.indent {
+  margin-left: 2em;
+}
+
+.links {
+  padding-bottom: .5em;
+}
+
+.links a{
+  margin-left: 3em;
+  padding-bottom: .5em;
+}
+
+.sideBarMenu {
+  display: none;
+}
+
+#sidebar {
+  display: none;
+}
+
+
+/* Idk what these were for, so if it breaks your stuff go ahead and uncomment it @J
+.centered {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.tagLine * {
+  display: inline-block;
+}
+.tagLine div {
+  border-bottom: solid;
+  width: 8em;
+} */
+
+/* ---- END DEFAULT ---- */
+
+@media only screen and (pointer: coarse) and (orientation: portrait){
+    .mobileSetup {
+      display: flex;
+      flex-flow: row nowrap;
+    }
+
+    .title {
+      display: flex;
+      flex-basis: auto;
+    }
+
+    .sub {
+        border-bottom: double;
+        border-width:0.4em;
+        margin-bottom: 0.2em;
+        padding-bottom: 0.7em;
+    }
+
+    /* START MENU */
+
+    .menu {
+      display: none;
+    }
+
+    .loggedIn {
+      display: none;
+    }
+
+    /* Had to hide the other menus, they don't deserve the mobile experience */
+
+    .sidebarMenu {
+      display: flex;
+      flex-basis: auto;
+      padding: 10px;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .sidebarMenu a {
+      font-size: 6em;
+      text-decoration: none;
+    }
+
+    #sidebar {
+      position: fixed;
+      display: block;
+      top: 0px;
+      z-index: 1;
+      background-color: rgba(2, 2, 2, 0.8); /* Cool transparency \o/ */
+      height: 110%;
+      width: 60%;
+      overflow: hidden;
+      font-size: 5em;
+    }
+}
