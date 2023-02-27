@@ -77,17 +77,18 @@
             output.innerHTML = "";
             document.getElementById("teams").innerHTML = "";
 
+            // Display teams
+            console.log( obj.teams );
+            for(let key in obj.teams) {
+              displayTeam( obj.teams[key] );
+            }
+
             let delayTime = document.getElementById("speed").value;
             for(let x=0;x<obj.game.length;x++) {
               setTimeout(
                 function () {
                   processTimeSlice( obj.game[x], (x == obj.game.length - 1) )
                 }, delayTime * x);
-            }
-
-            // Display teams
-            for(let x=0;x<obj.teams.length;x++) {
-              displayTeam( obj.teams[x] );
             }
           }
         };
@@ -114,12 +115,12 @@
         window.scrollTo(0, document.body.scrollHeight);
         output.scrollTop = output.scrollHeight;
 
-        if( Object.hasOwn(timeSlice, "data") ) {
+        if( Object.hasOwn(timeSlice, "teams") ) {
           document.getElementById("teams").innerHTML = "";
 
-          let obj = timeSlice.data;
-          for(let x=0;x<obj.length;x++) {
-            displayTeam( obj[x] );
+          let teams = timeSlice.teams;
+          for(let key in teams) {
+            displayTeam( teams[key] );
           }
         }
 
@@ -130,6 +131,7 @@
       }
 
       function displayTeam(teamData) {
+        console.log(teamData);
         let teamsDiv = document.getElementById("teams");
 
         let team = document.createElement("div");
@@ -139,9 +141,9 @@
         teamName.innerHTML += teamData.teamName;
         team.appendChild( teamName );
 
-        for(let x=0;x<teamData.players.length;x++) {
-          let playerData = teamData.players[x];
-          // console.log( playerData );
+        // for(let x=0;x<teamData.players.length;x++) {
+        for(let key in teamData.players) {
+          let playerData = teamData.players[key];
 
           let player = document.createElement("p");
           if( playerData.inGame == false ) {
