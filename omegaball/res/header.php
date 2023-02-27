@@ -42,5 +42,6 @@
   <a href="/omegaball/league">LEAGUE</a>
   <a href="/omegaball/vote">VOTE</a>
   <a href="/omegaball/rules">RULES</a>
+  <a href="/omegaball/account">ACCOUNT</a>
   <a href="/omegaball/console">CONSOLE</a>
 </div>
