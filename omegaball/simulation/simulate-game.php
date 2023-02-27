@@ -154,7 +154,7 @@
     // Player makes a choice
 
     // If a player has no balls and there are balls on the ground, pick one up
-    if( $playerObj["heldBalls"] == 0 && $data["ballsOnGround"] > 0 ) {
+    if( $data["ballsOnGround"] > 0  && ($playerObj["heldBalls"] == 0 || random() < .5)) {
       pickupBall($playerObj);
       return;
     }
