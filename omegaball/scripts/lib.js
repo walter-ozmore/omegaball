@@ -256,6 +256,42 @@ function toggleHighlight(selectElement, checkElement=null) {
 }
 
 
+function getDivisionElement(onClickTeam = null, noColumns = false) {
+  let gridDiv = document.createElement("div");
+  gridDiv.classList.add("league-grid");
+  if( noColumns )
+    gridDiv.style.gridTemplateColumns = "1fr";
+
+  let divElements = [];
+
+  for(let acronym in data["teams"]) {
+    let team = data["teams"][acronym];
+    let division = team.division;
+    let ele = divElements[division];
+
+    if( ele == undefined ) {
+      ele = document.createElement("div");
+      ele.appendChild( mkEle("h3", team["division"]) );
+      gridDiv.appendChild( ele );
+      divElements[division] = ele;
+    }
+
+    let teamNameEle = document.createElement("p");
+    teamNameEle.style.color = team["teamColor"] ;
+    teamNameEle.innerHTML = team["teamName"];
+    teamNameEle.style.cursor = "pointer";
+    teamNameEle.onclick = function() {
+      toggleHighlight( teamNameEle, gridDiv );
+      if(onClickTeam != null)
+        onClickTeam(teamIndex=team["acronym"]);
+    };
+    ele.appendChild( teamNameEle );
+  }
+
+  return gridDiv;
+}
+
+
 window.onload = function() {
   checkNotify();
   checkSelected();
