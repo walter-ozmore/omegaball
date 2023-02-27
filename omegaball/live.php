@@ -65,14 +65,14 @@
     </style>
 
     <script>
-      function run() {
+      function run(type="normal") {
         document.getElementById("controller").style.display = "none";
 
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
           if (this.readyState == 4 && this.status == 200) {
             let txt = this.responseText;
-            // console.log(txt);
+            console.log(txt);
             var obj = JSON.parse(txt);
             // console.log(obj);
 
@@ -87,6 +87,14 @@
             for(let key in obj.teams) {
               displayTeam( obj.teams[key], ((eo++%2==0)?"left":"right") );
             }
+
+            // Display stats
+            let statsDiv = document.getElementById("stats");
+            let SECONDS = obj.game.length * 8;
+            statsDiv.innerHTML = `
+            Number of Messages `+obj.game.length +`<br>
+            Time to complete game: `+new Date(SECONDS * 1000).toISOString().slice(11, 19);
+
 
             let delayTime = document.getElementById("speed").value;
             for(let x=0;x<obj.game.length;x++) {
@@ -105,7 +113,10 @@
         ];
         let team1 = document.getElementById("team1").value;
         let team2 = document.getElementById("team2").value;
-        xhttp.open("GET", "/omegaball/simulation/simulate-game.php?q="+JSON.stringify(json)+"&team1="+team1+"&team2="+team2, true);
+        if(type == "normal")
+          xhttp.open("GET", "/omegaball/simulation/simulate-game.php?q="+JSON.stringify(json)+"&team1="+team1+"&team2="+team2, true);
+        else
+          xhttp.open("GET", "/omegaball/simulation/op/simulate-game.php?q="+JSON.stringify(json)+"&team1="+team1+"&team2="+team2, true);
         xhttp.send();
       }
 
@@ -205,11 +216,13 @@
 
   <body>
     <div id="teams" class="teams"></div>
+    <div id="stats"></div>
 
     <center>
       <div id="controller">
         <?php createSelector("team1"); ?>
         <button onclick="run()" id="start-button">Start Match</button>
+        <button onclick="run('op')" id="start-button">Start Match with Out Points</button>
         <?php createSelector("team2"); ?>
         <select id="speed">
           <option value="10">Near Instant (1/100s)</option>

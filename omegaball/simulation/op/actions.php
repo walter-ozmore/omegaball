@@ -1,23 +1,21 @@
 <?php
-  /**
-   * Drops all the balls that the player is holding then sets the player to out,
-   * then anounces in the chat that the player is out
-   *
-   * @param player The array of the player to set out
-   */
-  function setPlayerOut($player) {
+  function playerHit($player) {
     global $data;
+
+    if($player["outPoints"] > 0) {
+      $player["outPoints"]--;
+      save($player);
+      return;
+    }
+    $player["outPoints"] = 2;
 
     $player["inGame"] = false;
     $data["ballsOnGround"] += $player["heldBalls"];
     $player["heldBalls"] = 0;
 
     save($player);
-
-    $teams = getTeam($player);
-
     // Create time slice data
-    // message("player.out", ["player"=>getPlayerDisplayName($player)], true);
+    message("player.out", ["player"=>getPlayerDisplayName($player)], true);
   }
 
   function returnPlayer() {}
@@ -78,7 +76,7 @@
             "attacker"=>getPlayerDisplayName($attacker),
             "defender"=>getPlayerDisplayName($defender)
           ]);
-          setPlayerOut($defender);
+          playerHit($defender);
           break;
         }
         // Defender dodges the ball
@@ -95,7 +93,7 @@
             "attacker"=>getPlayerDisplayName($attacker),
             "defender"=>getPlayerDisplayName($defender)
           ]);
-          setPlayerOut($defender);
+          playerHit($defender);
           $data["ballsOnGround"]++;
           break;
         }
@@ -103,7 +101,7 @@
           "attacker"=>getPlayerDisplayName($attacker),
           "defender"=>getPlayerDisplayName($defender)
         ]);
-        setPlayerOut($attacker);
+        playerHit($attacker);
 
         // Bring someone back
         $options = [];

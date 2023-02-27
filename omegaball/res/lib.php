@@ -49,6 +49,15 @@
           if( compare($playerIndex, $playerID) )
             return $team;
     }
+
+    if( array_key_exists("playerName", $args) ) {
+      $playerID = $args["playerName"];
+
+      foreach( $data["teams"] as $team )
+        foreach( $team["players"] as $playerIndex => $player )
+          if( compare($playerIndex, $playerID) )
+            return $team;
+    }
   }
 
 

@@ -1,7 +1,7 @@
 <?php
   require_once realpath($_SERVER["DOCUMENT_ROOT"])."/omegaball/res/lib.php";
-  require_once realpath($_SERVER["DOCUMENT_ROOT"])."/omegaball/simulation/util.php";
-  require_once realpath($_SERVER["DOCUMENT_ROOT"])."/omegaball/simulation/actions.php";
+  require_once "util.php";
+  require_once "actions.php";
 
   /**
    * Check if the game is over by any means
