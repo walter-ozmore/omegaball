@@ -213,13 +213,16 @@
     global $data;
 
     // Set balls on the ground of the arena
-    $data["ballsOnGround"] = 35;
+    $data["ballsOnGround"] = 1;
 
-    foreach( $data["teams"] as $teamIndex => $team )
+    foreach( $data["teams"] as $teamIndex => $team ) {
       foreach( $team["players"] as $playerIndex => $player ) {
         $data["teams"][$teamIndex]["players"][$playerIndex]["heldBalls"] = 0;
         $data["teams"][$teamIndex]["players"][$playerIndex]["inGame"] = true;
       }
+
+      $data["ballsOnGround"] += sizeof($team["players"]) / 5;
+    }
   }
 
   /****************************************************************************

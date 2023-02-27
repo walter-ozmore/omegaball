@@ -68,8 +68,9 @@
         xhttp.onreadystatechange = function() {
           if (this.readyState == 4 && this.status == 200) {
             let txt = this.responseText;
+            // console.log(txt);
             var obj = JSON.parse(txt);
-            console.log(obj);
+            // console.log(obj);
 
             let output = document.getElementById("output");
 
@@ -78,7 +79,6 @@
             document.getElementById("teams").innerHTML = "";
 
             // Display teams
-            console.log( obj.teams );
             for(let key in obj.teams) {
               displayTeam( obj.teams[key] );
             }
@@ -131,7 +131,6 @@
       }
 
       function displayTeam(teamData) {
-        console.log(teamData);
         let teamsDiv = document.getElementById("teams");
 
         let team = document.createElement("div");
@@ -148,7 +147,6 @@
           let player = document.createElement("p");
           if( playerData.inGame == false ) {
             let dim = modifyColorBrightness( teamData.teamColor, 0.65 );
-            console.log( teamData.teamColor + " => "+dim )
             player.style.color = dim;
             player.style.textDecoration = 'line-through';
           }

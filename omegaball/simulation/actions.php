@@ -154,7 +154,20 @@
     if( sizeof($options) <= 0 ) return null;
 
     $index = rand(0, sizeof($options)-1);
-    return $options[$index];
+    $target = $options[$index];
+
+    // Reduce chance of being targeted
+    $rand = random();
+    if( sizeof($options) > 1 && $rand < $target["incorporeality"] ) {
+      message("player.changeTarget.incorporeality", [
+        "attacker"=>getPlayerDisplayName($attacker),
+        "defender"=>getPlayerDisplayName($target),
+        "chance"=>$target["incorporeality"],
+        "value"=>$rand
+      ], false);
+      return pickTarget($attacker);
+    }
+    return $target;
   }
 
 

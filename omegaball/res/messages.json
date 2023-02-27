@@ -46,6 +46,9 @@
   "player.ricochet": [
     "<attacker>'s throw ricochets to <player>!"
   ],
+  "player.changeTarget.incorporeality": [
+    "<attacker> is finding it hard to see <defender>"
+  ],
   "player.eyes.expunged": [
     "The EYE opens, witnessing <player>. <player> is Expunged!"
   ],
