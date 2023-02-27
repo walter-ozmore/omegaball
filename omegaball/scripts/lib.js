@@ -187,13 +187,13 @@ function modifyColorBrightness(hexColor, amount) {
 /**
  * @brief Send an AJAX request to a server.
  *
- * This function sends an AJAX request to the specified URL using the POST method,
- * and executes the specified function when the response is received. The optional
- * arguments can be used to send data along with the request.
+ * This function sends an AJAX request to the specified URL using the POST
+ * method, and executes the specified function when the response is received.
+ * The optional arguments can be used to send data along with the request.
  *
  * @param {string} url The URL to send the request to.
  * @param {function} fun The function to execute when the response is received.
- * @param {string }args Optional arguments to send with the request.
+ * @param {string} args Optional arguments to send with the request.
  */
 function ajax(url, fun, args="") {
   let xhttp = new XMLHttpRequest();
@@ -227,18 +227,33 @@ function mkEle(type, innerHTML) {
  * @param {HTMLElement} checkElement - The element to remove the highlight class
  * from and all its child elements.
  */
-function toggleHighlight(selectElement, checkElement) {
-  // Validate input
-  if (!selectElement instanceof HTMLElement || !checkElement instanceof HTMLElement) {
-    throw new Error('Invalid input: selectElement and checkElement must be HTMLElements');
-  }
+function toggleHighlight(selectElement, checkElement=null) {
+  if( checkElement != null ) {
+    // Validate input
+    if (!selectElement instanceof HTMLElement || !checkElement instanceof HTMLElement) {
+      throw new Error('Invalid input: selectElement and checkElement must be HTMLElements');
+    }
 
-  // Remove the highlight class from the check element and all its child elements
-  const elementsToUnhighlight = checkElement.querySelectorAll('*');
-  elementsToUnhighlight.forEach((el) => el.classList.remove('selected'));
+    // Remove the highlight class from the check element and all its child elements
+    const elementsToUnhighlight = checkElement.querySelectorAll('*');
+    for(let index in elementsToUnhighlight) {
+      let element = elementsToUnhighlight[index];
+      console.log(element);
+      if( element.classList == undefined) continue;
+
+      if( element.classList.contains("selected") ) {
+        element.classList.remove("selected");
+        element.style.color = element.style.backgroundColor;
+        element.style.backgroundColor = "unset";
+      }
+    }
+  }
 
   // Add the highlight class to the selected element
   selectElement.classList.add('selected');
+
+  selectElement.style.backgroundColor = selectElement.style.color;
+  selectElement.style.color = "black";
 }
 
 
