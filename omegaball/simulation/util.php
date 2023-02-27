@@ -6,7 +6,7 @@
   function loadMessages() {
     global $messagesJson;
 
-    $file = realpath($_SERVER["DOCUMENT_ROOT"])."/omegaball/simulation/messages.json";
+    $file = realpath($_SERVER["DOCUMENT_ROOT"])."/omegaball/res/messages.json";
     $data = file_get_contents($file);
     $messagesJson = json_decode($data);
   }
