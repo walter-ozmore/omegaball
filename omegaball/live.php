@@ -13,6 +13,10 @@
         width: 100%;
       }
 
+      .team {
+        margin: 0 1em 0 1em;
+      }
+
       .output {
         padding: 4em;
         max-height: 40em;
@@ -79,8 +83,9 @@
             document.getElementById("teams").innerHTML = "";
 
             // Display teams
+            let eo = 0;
             for(let key in obj.teams) {
-              displayTeam( obj.teams[key] );
+              displayTeam( obj.teams[key], ((eo++%2==0)?"left":"right") );
             }
 
             let delayTime = document.getElementById("speed").value;
@@ -118,9 +123,10 @@
         if( Object.hasOwn(timeSlice, "teams") ) {
           document.getElementById("teams").innerHTML = "";
 
+          let eo = 0;
           let teams = timeSlice.teams;
           for(let key in teams) {
-            displayTeam( teams[key] );
+            displayTeam( teams[key], ((eo++%2==1)?"left":"right") );
           }
         }
 
@@ -130,14 +136,22 @@
         }
       }
 
-      function displayTeam(teamData) {
+      function displayTeam(teamData, textAlign="center") {
         let teamsDiv = document.getElementById("teams");
 
         let team = document.createElement("div");
         team.style.color = teamData.teamColor;
+        team.style.textAlign = textAlign;
+        team.classList.add("team");
 
         let teamName = document.createElement("h2");
         teamName.innerHTML += teamData.teamName;
+        if(textAlign == "left" || textAlign == "center") {
+          teamName.style.marginRight = "auto";
+        }
+        if(textAlign == "right" || textAlign == "center") {
+          teamName.style.marginLeft = "auto";
+        }
         team.appendChild( teamName );
 
         // for(let x=0;x<teamData.players.length;x++) {
@@ -156,8 +170,8 @@
             extra += "*";
           }
 
-          player.classList.add("indent");
-          player.innerHTML += playerData.playerName + extra;
+          // player.classList.add("indent");
+          player.innerHTML += (textAlign=="right")? extra + playerData.playerName: playerData.playerName + extra;
           team.appendChild( player );
         }
 
