@@ -238,7 +238,6 @@ function toggleHighlight(selectElement, checkElement=null) {
     const elementsToUnhighlight = checkElement.querySelectorAll('*');
     for(let index in elementsToUnhighlight) {
       let element = elementsToUnhighlight[index];
-      console.log(element);
       if( element.classList == undefined) continue;
 
       if( element.classList.contains("selected") ) {
