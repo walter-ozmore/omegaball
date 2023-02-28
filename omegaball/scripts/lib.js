@@ -255,11 +255,33 @@ function toggleHighlight(selectElement, checkElement=null) {
   selectElement.style.color = "black";
 }
 
+function mergeArgs(defaultArgs, args) {
+  // Make a copy of the default arguments object
+  const mergedArgs = { ...defaultArgs };
 
-function getDivisionElement(onClickTeam = null, noColumns = false) {
+  // Merge the arguments from the second object
+  for (const key in args) {
+    if (args.hasOwnProperty(key)) {
+      mergedArgs[key] = args[key];
+    }
+  }
+
+  return mergedArgs;
+}
+
+
+
+function getDivisionElement(args) {
+  defaultArgs = {
+    "multiSelect": false,
+    "noColumns": false,
+    "onClickTeam": undefined
+  };
+  args = mergeArgs(defaultArgs, args);
+
   let gridDiv = document.createElement("div");
   gridDiv.classList.add("league-grid");
-  if( noColumns )
+  if( args["noColumns"] )
     gridDiv.style.gridTemplateColumns = "1fr";
 
   let divElements = [];
@@ -281,9 +303,18 @@ function getDivisionElement(onClickTeam = null, noColumns = false) {
     teamNameEle.innerHTML = team["teamName"];
     teamNameEle.style.cursor = "pointer";
     teamNameEle.onclick = function() {
-      toggleHighlight( teamNameEle, gridDiv );
-      if(onClickTeam != null)
+      if(args["multiSelect"]) {
+        // if(teamNameEle.classList!=undefined && teamNameEle.classList.contains(selected)) {
+        //   toggleHighlight(teamNameEle);
+        // }
+      } else {
+        toggleHighlight( teamNameEle, gridDiv );
+      }
+
+      if(typeof args["onClickTeam"] === "function") {
+        onClickTeam = args["onClickTeam"];
         onClickTeam(teamIndex=team["acronym"]);
+      }
     };
     ele.appendChild( teamNameEle );
   }
@@ -291,6 +322,14 @@ function getDivisionElement(onClickTeam = null, noColumns = false) {
   return gridDiv;
 }
 
+
+function fetchData() {
+  ajax("/omegaball/ajax/get-data.php", function() {
+    if (this.readyState != 4 || this.status != 200) return;
+    var data = JSON.parse(this.responseText);
+    console.log(data);
+  });
+}
 
 window.onload = function() {
   checkNotify();
