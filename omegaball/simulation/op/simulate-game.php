@@ -112,7 +112,7 @@
   function runGame() {
     global $data, $gameRunning;
     $gameRunning = true;
-    $maxTurns = 200;
+    $maxTurns = 20_000;
 
     // Loop for a maximum of 30 turns, just incase of a infinite loop
     for($turnCounter = 0; $turnCounter < $maxTurns && $gameRunning; $turnCounter++) {
@@ -219,7 +219,7 @@
       foreach( $team["players"] as $playerIndex => $player ) {
         $data["teams"][$teamIndex]["players"][$playerIndex]["heldBalls"] = 0;
         $data["teams"][$teamIndex]["players"][$playerIndex]["inGame"] = true;
-        $data["teams"][$teamIndex]["players"][$playerIndex]["outPoints"] = 2;
+        $data["teams"][$teamIndex]["players"][$playerIndex]["outPoints"] = 5;
       }
 
       $data["ballsOnGround"] += sizeof($team["players"]) / 5;

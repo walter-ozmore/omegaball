@@ -7,7 +7,7 @@
       save($player);
       return;
     }
-    $player["outPoints"] = 2;
+    $player["outPoints"] = 5;
 
     $player["inGame"] = false;
     $data["ballsOnGround"] += $player["heldBalls"];

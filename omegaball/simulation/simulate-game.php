@@ -109,10 +109,43 @@
    * Runs the game by preforming actions for each player until the game is
    * finished. The game is finished when $gameRunning is false.
    */
-  function runGame() {
-    global $data, $gameRunning;
+  function runGame($args=[]) {
+    global $data, $outputObj, $gameRunning;
     $gameRunning = true;
     $maxTurns = 200;
+
+    loadMessages();
+
+    // Load teams in to our data
+    $loadDataArgs = ["teams"=>["MINO", "HEAV"]];
+    $data = loadData($loadDataArgs);
+
+    // Remove extra teams
+    foreach( $data["teams"] as $teamIndex => $team ) {
+      $hit = false;
+
+      // Check if the team is in the array
+      foreach( $loadDataArgs["teams"] as $teamAcronym )
+        if( compare($teamIndex, $teamAcronym) ) {
+          $hit = true;
+          break;
+        }
+
+      // Skip if hit is true, AKA if the team was found in the args
+      if($hit) continue;
+      unset( $data["teams"][$teamIndex] );
+    }
+
+    // Setup local varables
+    addLocalVarables();
+
+    // Check the given arguments
+    foreach($args as $key => $value) {}
+
+    $outputObj = [];
+    // Game is an array
+    $outputObj["game"] = [];
+    $outputObj["teams"] = $data["teams"];
 
     // Loop for a maximum of 30 turns, just incase of a infinite loop
     for($turnCounter = 0; $turnCounter < $maxTurns && $gameRunning; $turnCounter++) {
@@ -125,6 +158,8 @@
           break;
       }
     }
+
+    return $outputObj;
   }
 
 
@@ -228,36 +263,5 @@
   /****************************************************************************
    * Driver code goes here
    ****************************************************************************/
-  $debug = isset($_GET["debug"]);
-  if($debug)
-    echo '<link rel="stylesheet" href="/omegaball/res/master.css">';
-
-  loadMessages();
-
-  // Load teams in to our data
-  $args = [];
-  $args["teams"][] = "MINO";
-  $args["teams"][] = "HEAV";
-  $data = loadData($args);
-
-  // Remove teams
-  foreach( $data["teams"] as $teamIndex => $team ) {
-    if( compare($teamIndex, "MINO") || compare($teamIndex, "HEAV") )
-      continue;
-    unset( $data["teams"][$teamIndex] );
-  }
-
-  unset($args);
-
-  addLocalVarables();
-
-  // Start the output object
-  $outputObj = [];
-  // Game is an array
-  $outputObj["game"] = [];
-  $outputObj["teams"] = $data["teams"];
-
-  runGame();
-
-  echo json_encode( $outputObj );
+  echo json_encode( runGame() );
 ?>
