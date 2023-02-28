@@ -14,13 +14,10 @@
 
     save($player);
 
-    $teams = getTeam($player);
-
     // Create time slice data
-    // message("player.out", ["player"=>getPlayerDisplayName($player)], true);
+    message("player.out", ["player"=>getPlayerDisplayName($player)], true, true);
   }
 
-  function returnPlayer() {}
 
   /**
    * The given attacker will target a player and attempt to throw the ball at
@@ -55,6 +52,8 @@
     // Defending player respond
     ballComing($targetPlayer, $attackDodge, $attackCatch, $attacker);
   }
+
+
 
   function ballComing($defender, $attackDodge, $attackCatch, $attacker = null) {
     global $data;
@@ -129,6 +128,11 @@
     }
   }
 
+
+  /**
+   * Make the given player pick up a ball by remove it from the ground and
+   * adding one to $player["heldBalls"]
+   */
   function pickupBall($player) {
     global $data;
     $player["heldBalls"] = $player["heldBalls"] + 1;
@@ -187,23 +191,5 @@
       return pickTarget($attacker);
     }
     return $target;
-  }
-
-
-  function message($key, $args, $updateTeams=true) {
-    global $outputObj, $debug;
-
-    $message = getMessage($key, $args);
-    if($debug)
-      echo "<p>".$message."</p>";
-
-    // Create message
-    $timeSlice = [];
-    $timeSlice["message"] = $message;
-    if($updateTeams) {
-      global $data;
-      $timeSlice["teams"] = $data["teams"];
-    }
-    $outputObj["game"][] = $timeSlice;
   }
 ?>

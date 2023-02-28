@@ -36,4 +36,34 @@
 
     return $str;
   }
+
+  function message($key, $args, $updateTeams=true, $appendToLastMessage=false) {
+    global $outputObj, $debug;
+
+    $message = getMessage($key, $args);
+    if($debug) echo "<p>".$message."</p>";
+
+    if($appendToLastMessage) {
+      $timeSlice = end($outputObj["game"]);
+      $timeSlice["message"] .= " ". $message;
+    } else {
+      // Create message
+      $timeSlice = [];
+      $timeSlice["message"] = $message;
+    }
+
+    if($updateTeams) {
+      global $data;
+      $timeSlice["teams"] = $data["teams"];
+    }
+
+    // If appending, then just update the last message
+    if($appendToLastMessage) {
+      $outputObj["game"][ array_key_last($outputObj["game"]) ] = $timeSlice;
+      return;
+    }
+
+    // Add timeslice to end of game
+    $outputObj["game"][] = $timeSlice;
+  }
 ?>

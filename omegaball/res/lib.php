@@ -62,6 +62,36 @@
 
 
   /**
+   * Save the given array back to the main data object
+   *
+   * @param mixed the array to be saved {player, save}
+   */
+  function save($arg) {
+    global $data;
+
+    if( array_key_exists("playerName", $arg) ) {
+      foreach( $data["teams"] as $teamIndex => $team )
+        foreach( $team["players"] as $playerIndex => $player )
+          // if( $arg["playerName"] == $playerIndex ) {
+          if( compare( $arg["playerName"], $playerIndex ) ) {
+            $data["teams"][$teamIndex]["players"][$playerIndex] = $arg;
+            return;
+          }
+      return;
+    }
+
+    if( array_key_exists("acronym", $arg) ) {
+      foreach( $data["teams"] as $teamIndex => $team )
+        if( compare( $arg["acronym"], $teamIndex ) ) {
+          $data["teams"][$teamIndex] = $arg;
+          return;
+        }
+      return;
+    }
+  }
+
+
+  /**
    * Compare two values $a and $b
    *
    * @param mixed $a First value to compare

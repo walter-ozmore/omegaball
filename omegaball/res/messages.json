@@ -8,7 +8,7 @@
     "<attacker> makes a throw, aiming at <defender>"
   ],
   "player.dodge.failure": [
-    "<defender> cannot dodge <attacker>'s throw. <defender> is out!"
+    "<defender> cannot dodge <attacker>'s throw."
   ],
   "player.catch.failure": [
     "<defender> tries to catch <attacker>'s throw, but is hit instead.",
@@ -22,7 +22,7 @@
     "<defender> backflips, dodging <attacker>'s throw."
   ],
   "player.catch.success": [
-    "<defender> catches <attacker>'s throw. <attacker> is out!"
+    "<defender> catches <attacker>'s throw."
   ],
   "player.in": [
     "<player> frees <returnedPlayer>. <returnedPlayer> returns to play."

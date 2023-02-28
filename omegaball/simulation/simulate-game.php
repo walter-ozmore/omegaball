@@ -112,6 +112,7 @@
   function runGame($args=[]) {
     global $data, $outputObj, $gameRunning;
     $gameRunning = true;
+    $useOutPoints = false;
     $maxTurns = 200;
 
     loadMessages();
@@ -197,36 +198,6 @@
     // If the player has a ball, throw it
     if( $playerObj["heldBalls"] > 0 ) {
       throwBall($playerObj);
-      return;
-    }
-  }
-
-
-  /**
-   * Save the given array back to the main data object
-   *
-   * @param mixed the array to be saved {player, save}
-   */
-  function save($arg) {
-    global $data;
-
-    if( array_key_exists("playerName", $arg) ) {
-      foreach( $data["teams"] as $teamIndex => $team )
-        foreach( $team["players"] as $playerIndex => $player )
-          // if( $arg["playerName"] == $playerIndex ) {
-          if( compare( $arg["playerName"], $playerIndex ) ) {
-            $data["teams"][$teamIndex]["players"][$playerIndex] = $arg;
-            return;
-          }
-      return;
-    }
-
-    if( array_key_exists("acronym", $arg) ) {
-      foreach( $data["teams"] as $teamIndex => $team )
-        if( compare( $arg["acronym"], $teamIndex ) ) {
-          $data["teams"][$teamIndex] = $arg;
-          return;
-        }
       return;
     }
   }
