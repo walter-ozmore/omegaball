@@ -188,6 +188,27 @@
 
         teamsDiv.appendChild( team );
       }
+
+      function onClickTeam(args) {
+        if(args["selected"]) {
+          selectedTeams.push( args["teamIndex"] );
+        } else {
+
+        }
+      }
+
+      var selectedTeams = [];
+
+      document.addEventListener("DOMContentLoaded", function() {
+        ajax("/omegaball/ajax/get-data.php", function() {
+          if (this.readyState != 4 || this.status != 200) return;
+          data = JSON.parse(this.responseText);
+
+          let divisionElement = getDivisionElement({"onClickTeam":onClickTeam, "multiSelect": true});
+
+          document.getElementById("teamSelector").appendChild(divisionElement);
+        });
+      });
     </script>
 
     <?php
@@ -215,23 +236,21 @@
   </header>
 
   <body>
+    <div id="controller">
+      <div id="teamSelector"></div>
+      <button onclick="run()">Start Match</button><br>
+
+      <select id="speed">
+        <option value="0">Instant</option>
+        <option value="80">100x</option>
+        <option value="800">10x</option>
+        <option value="8000">1x</option>
+      </select>
+    </div>
+
+
     <div id="teams" class="teams"></div>
     <div id="stats"></div>
-
-    <center>
-      <div id="controller">
-        <?php createSelector("team1"); ?>
-        <button onclick="run()" id="start-button">Start Match</button>
-        <button onclick="run('op')" id="start-button">Start Match with Out Points</button>
-        <?php createSelector("team2"); ?>
-        <select id="speed">
-          <option value="10">Near Instant (1/100s)</option>
-          <option value="100">Faster (1/10s)</option>
-          <option value="1000">Fast (1s)</option>
-          <option value="8000">Normal (8s)</option>
-        </select>
-      </div>
-    </center>
     <div class="output" id="output"></div>
   </body>
 </html>

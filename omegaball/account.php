@@ -10,26 +10,6 @@
       .linksVertical a{
         display: block;
       }
-
-      .league-grid {
-        display: grid;
-        grid-template-rows: 1fr 1fr;
-        row-gap: 2em;
-      }
-
-      .league-grid h3, .league-grid p {
-        margin: 0px;
-        padding: 0px;
-        text-align: left;
-      }
-
-      @media screen and (min-width: 34em) {
-        .league-grid {
-          grid-template-columns: 1fr 1fr;
-          column-gap: 1em;
-          width: 35em;
-        }
-      }
     </style>
 
     <script src="https://www.everyoneandeverything.org/account/lib.js"></script>

@@ -18,6 +18,47 @@
     message("player.out", ["player"=>getPlayerDisplayName($player)], true, true);
   }
 
+  function playerOPHit($player) {
+    $player["outPoints"] -= 1;
+    if($player["outPoints"] <= 0)
+      setPlayerOut($player);
+  }
+
+  function playerHit($player) {
+    global $data;
+
+    if($data["rules"]["useOutPoints"]) {
+      playerOPHit($player);
+      return;
+    }
+
+    setPlayerOut($player);
+  }
+
+
+  /**
+   * The given player returns a team member
+   */
+  function returnPlayer($defender) {
+    // Bring someone back
+    $options = [];
+    $team = getTeam($defender);
+    // Queue up options
+    foreach($team["players"] as $player) {
+      if($player["inGame"]) continue;
+      $options[] =$player;
+    }
+
+    if(sizeof($options) > 0) {
+      $returnPlayer = $options[rand(0, sizeof($options) - 1)];
+      $returnPlayer["inGame"] = true;
+
+      message( "player.in", ["player"=>getPlayerDisplayName($defender, false), "returnedPlayer"=>getPlayerDisplayName($returnPlayer, false)] );
+
+      save( $returnPlayer );
+    }
+  }
+
 
   /**
    * The given attacker will target a player and attempt to throw the ball at
@@ -54,7 +95,9 @@
   }
 
 
-
+  /**
+   * The ball from $attacker is being thrown at $defender
+   */
   function ballComing($defender, $attackDodge, $attackCatch, $attacker = null) {
     global $data;
 
@@ -68,7 +111,11 @@
       // Select the option with the best success
 
     switch($action) {
-      case 0:// Attempt to dodge
+      /**
+       * Attempt to dodge
+       */
+      case 0:
+        // Add the ball back to the ground
         $data["ballsOnGround"]++;
 
         if( $attackDodge > $defendDodge) {
@@ -77,7 +124,7 @@
             "attacker"=>getPlayerDisplayName($attacker),
             "defender"=>getPlayerDisplayName($defender)
           ]);
-          setPlayerOut($defender);
+          playerHit($defender);
           break;
         }
         // Defender dodges the ball
@@ -88,13 +135,16 @@
         break;
 
 
-      case 1:// Attempt to catch
+      /**
+       * Attempt to catch
+       */
+      case 1:
         if( $attackCatch > $defendCatch ) {
           message( "player.catch.failure",[
             "attacker"=>getPlayerDisplayName($attacker),
             "defender"=>getPlayerDisplayName($defender)
           ]);
-          setPlayerOut($defender);
+          playerHit($defender);
           $data["ballsOnGround"]++;
           break;
         }
@@ -102,25 +152,8 @@
           "attacker"=>getPlayerDisplayName($attacker),
           "defender"=>getPlayerDisplayName($defender)
         ]);
-        setPlayerOut($attacker);
-
-        // Bring someone back
-        $options = [];
-        $team = getTeam($defender);
-        // Queue up options
-        foreach($team["players"] as $player) {
-          if($player["inGame"]) continue;
-          $options[] =$player;
-        }
-
-        if(sizeof($options) > 0) {
-          $returnPlayer = $options[rand(0, sizeof($options) - 1)];
-          $returnPlayer["inGame"] = true;
-
-          message( "player.in", ["player"=>getPlayerDisplayName($defender, false), "returnedPlayer"=>getPlayerDisplayName($returnPlayer, false)] );
-
-          save( $returnPlayer );
-        }
+        playerHit($attacker);
+        returnPlayer($defender);
 
         $defender["heldBalls"]++;
         save($defender);
@@ -139,7 +172,8 @@
     $data["ballsOnGround"] = $data["ballsOnGround"] - 1;
     save( $player );
 
-    message( "player.pickUpBall", ["player"=>getPlayerDisplayName($player, false)] );
+    if( $data["rules"]["showBallPickup"] )
+      message( "player.pickUpBall", ["player"=>getPlayerDisplayName($player, false)] );
   }
 
 

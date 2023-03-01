@@ -112,7 +112,6 @@
   function runGame($args=[]) {
     global $data, $outputObj, $gameRunning;
     $gameRunning = true;
-    $useOutPoints = false;
     $maxTurns = 200;
 
     loadMessages();
@@ -136,6 +135,12 @@
       if($hit) continue;
       unset( $data["teams"][$teamIndex] );
     }
+
+    // Setup game rules
+    $data["rules"]["useOutPoints"] = true;
+    $data["rules"]["defaultOutPointsAmmount"] = 2;
+
+    $data["rules"]["showBallPickup"] = false;
 
     // Setup local varables
     addLocalVarables();
@@ -225,6 +230,10 @@
       foreach( $team["players"] as $playerIndex => $player ) {
         $data["teams"][$teamIndex]["players"][$playerIndex]["heldBalls"] = 0;
         $data["teams"][$teamIndex]["players"][$playerIndex]["inGame"] = true;
+
+        if($data["rules"]["useOutPoints"] == true) {
+          $data["teams"][$teamIndex]["players"][$playerIndex]["outPoints"] = $data["rules"]["defaultOutPointsAmmount"];
+        }
       }
 
       $data["ballsOnGround"] += sizeof($team["players"]) / 5;

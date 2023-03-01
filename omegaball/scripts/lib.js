@@ -238,21 +238,39 @@ function toggleHighlight(selectElement, checkElement=null) {
     const elementsToUnhighlight = checkElement.querySelectorAll('*');
     for(let index in elementsToUnhighlight) {
       let element = elementsToUnhighlight[index];
-      if( element.classList == undefined) continue;
 
-      if( element.classList.contains("selected") ) {
-        element.classList.remove("selected");
-        element.style.color = element.style.backgroundColor;
-        element.style.backgroundColor = "unset";
-      }
+      if( element == selectElement) continue;
+
+      unHighlight(element);
     }
   }
+  // selectedElement.classList != undefined && selectedElement.classList.contains("selected")
 
   // Add the highlight class to the selected element
-  selectElement.classList.add('selected');
+  if( selectElement.classList != undefined && selectElement.classList.contains("selected")) {
+    unHighlight(selectElement);
+    return;
+  }
+  highlight(selectElement);
+}
 
-  selectElement.style.backgroundColor = selectElement.style.color;
-  selectElement.style.color = "black";
+function unHighlight(element) {
+  if( element.classList == undefined) return;
+
+  if( element.classList.contains("selected") ) {
+    element.classList.remove("selected");
+    element.style.color = element.style.backgroundColor;
+    element.style.backgroundColor = "unset";
+  }
+}
+
+function highlight(element) {
+  if( element.classList != undefined && element.classList.contains("selected"))
+    return;
+  element.classList.add('selected');
+
+  element.style.backgroundColor = element.style.color;
+  element.style.color = "black";
 }
 
 function mergeArgs(defaultArgs, args) {
@@ -281,7 +299,7 @@ function getDivisionElement(args) {
 
   let gridDiv = document.createElement("div");
   gridDiv.classList.add("league-grid");
-  if( args["noColumns"] )
+  if( args["noColumns"] == true )
     gridDiv.style.gridTemplateColumns = "1fr";
 
   let divElements = [];
@@ -304,16 +322,17 @@ function getDivisionElement(args) {
     teamNameEle.style.cursor = "pointer";
     teamNameEle.onclick = function() {
       if(args["multiSelect"]) {
-        // if(teamNameEle.classList!=undefined && teamNameEle.classList.contains(selected)) {
-        //   toggleHighlight(teamNameEle);
-        // }
+        toggleHighlight(teamNameEle);
       } else {
         toggleHighlight( teamNameEle, gridDiv );
       }
 
       if(typeof args["onClickTeam"] === "function") {
         onClickTeam = args["onClickTeam"];
-        onClickTeam(teamIndex=team["acronym"]);
+        onClickTeam({
+          "teamIndex": team["acronym"],
+          "selected": (teamNameEle.classList != undefined && teamNameEle.classList.contains("selected"))
+        });
       }
     };
     ele.appendChild( teamNameEle );

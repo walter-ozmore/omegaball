@@ -137,7 +137,8 @@ function getStatString(str, player, substats = []) {
 function init() {
 
   // ajax("/omegaball/ajax/get-teams.php", drawDivision);
-  let divisionContent = getDivisionElement({"onClickTeam":selectTeam});
+  let divisionContent = getDivisionElement({"noColumns":true, "onClickTeam":selectTeam});
+  divisionContent.style.width = "unset";
   let divisionElement = document.getElementById("division");
   divisionElement.appendChild(divisionContent);
   divisionElement.style.display = "block";
