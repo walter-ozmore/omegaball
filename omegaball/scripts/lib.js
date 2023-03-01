@@ -229,20 +229,7 @@ function mkEle(type, innerHTML) {
  */
 function toggleHighlight(selectElement, checkElement=null) {
   if( checkElement != null ) {
-    // Validate input
-    if (!selectElement instanceof HTMLElement || !checkElement instanceof HTMLElement) {
-      throw new Error('Invalid input: selectElement and checkElement must be HTMLElements');
-    }
-
-    // Remove the highlight class from the check element and all its child elements
-    const elementsToUnhighlight = checkElement.querySelectorAll('*');
-    for(let index in elementsToUnhighlight) {
-      let element = elementsToUnhighlight[index];
-
-      if( element == selectElement) continue;
-
-      unHighlight(element);
-    }
+    unHighlight(checkElement, true)
   }
   // selectedElement.classList != undefined && selectedElement.classList.contains("selected")
 
@@ -254,7 +241,16 @@ function toggleHighlight(selectElement, checkElement=null) {
   highlight(selectElement);
 }
 
-function unHighlight(element) {
+function unHighlight(element, recursive = false) {
+  if( recursive == true ) {
+    const elementsToUnhighlight = checkElement.querySelectorAll('*');
+
+    for(let index in elementsToUnhighlight) {
+      let element = elementsToUnhighlight[index];
+      unHighlight(element);
+    }
+  }
+
   if( element.classList == undefined) return;
 
   if( element.classList.contains("selected") ) {
