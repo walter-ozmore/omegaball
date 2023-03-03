@@ -313,9 +313,11 @@ function getDivisionElement(args) {
     }
 
     let teamNameEle = document.createElement("p");
+    if(args["multiSelect"])
+      teamNameEle.classList.add("prevent-select");
     teamNameEle.style.color = team["teamColor"] ;
-    teamNameEle.innerHTML = team["teamName"];
     teamNameEle.style.cursor = "pointer";
+    teamNameEle.innerHTML = team["teamName"];
     teamNameEle.onclick = function() {
       if(args["multiSelect"]) {
         toggleHighlight(teamNameEle);

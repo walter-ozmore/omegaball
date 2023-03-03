@@ -163,6 +163,12 @@ button {
   text-align: left;
 }
 
+.prevent-select {
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  user-select: none; /* Standard syntax */
+}
+
 @media screen and (min-width: 34em) {
   .league-grid {
     grid-template-columns: 1fr 1fr;
