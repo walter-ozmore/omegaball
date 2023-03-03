@@ -45,7 +45,7 @@
   </head>
 
   <header>
-    <?php require realpath($_SERVER["DOCUMENT_ROOT"])."\\omegaball\\res\\header.php"; ?>
+    <?php require realpath($_SERVER["DOCUMENT_ROOT"])."/omegaball/res/header.php"; ?>
   </header>
   <body>
     <div class="grid-container">
