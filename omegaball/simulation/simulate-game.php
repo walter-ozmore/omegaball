@@ -117,15 +117,14 @@
     loadMessages();
 
     // Load teams in to our data
-    $loadDataArgs = ["teams"=>["MINO", "HEAV"]];
-    $data = loadData($loadDataArgs);
+    $data = loadData($args);
 
     // Remove extra teams
     foreach( $data["teams"] as $teamIndex => $team ) {
       $hit = false;
 
       // Check if the team is in the array
-      foreach( $loadDataArgs["teams"] as $teamAcronym )
+      foreach( $args["teams"] as $teamAcronym )
         if( compare($teamIndex, $teamAcronym) ) {
           $hit = true;
           break;
@@ -239,9 +238,4 @@
       $data["ballsOnGround"] += sizeof($team["players"]) / 5;
     }
   }
-
-  /****************************************************************************
-   * Driver code goes here
-   ****************************************************************************/
-  echo json_encode( runGame() );
 ?>

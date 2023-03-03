@@ -313,8 +313,7 @@ function getDivisionElement(args) {
     }
 
     let teamNameEle = document.createElement("p");
-    if(args["multiSelect"])
-      teamNameEle.classList.add("prevent-select");
+    teamNameEle.classList.add("prevent-select");
     teamNameEle.style.color = team["teamColor"] ;
     teamNameEle.style.cursor = "pointer";
     teamNameEle.innerHTML = team["teamName"];

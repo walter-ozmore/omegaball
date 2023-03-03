@@ -65,28 +65,35 @@
     </style>
 
     <script>
-      function run(type="normal") {
+      function run() {
+        console.log(selectedTeams);
+
+        let args = {};
+        args["teams"] = selectedTeams;
+
+        // Hide controls so they can't spam it
         document.getElementById("controller").style.display = "none";
 
-        var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function() {
-          if (this.readyState == 4 && this.status == 200) {
-            let txt = this.responseText;
-            console.log(txt);
-            var obj = JSON.parse(txt);
-            // console.log(obj);
+        ajax(
+          "/omegaball/ajax/run-simulation.php",
+          function() {
+            if (this.readyState != 4 || this.status != 200) return;
+            let obj = null;
+            try {
+              obj = JSON.parse(this.responseText);
+            } catch {
+              console.error(this.responseText);
+              return;
+            }
 
             let output = document.getElementById("output");
 
             // Clear info
             output.innerHTML = "";
-            document.getElementById("teams").innerHTML = "";
+
 
             // Display teams
-            let eo = 0;
-            for(let key in obj.teams) {
-              displayTeam( obj.teams[key], ((eo++%2==0)?"left":"right") );
-            }
+            displayTeams(obj.teams);
 
             // Display stats
             let statsDiv = document.getElementById("stats");
@@ -98,26 +105,19 @@
 
             let delayTime = document.getElementById("speed").value;
             for(let x=0;x<obj.game.length;x++) {
-              setTimeout(
-                function () {
-                  processTimeSlice( obj.game[x], (x == obj.game.length - 1) )
-                }, delayTime * x);
+              if(delayTime > 10)
+                setTimeout(
+                  function () {
+                    processTimeSlice( obj.game[x], (x == obj.game.length - 1) )
+                  },
+                  delayTime * x
+                );
+              else
+                processTimeSlice( obj.game[x], (x == obj.game.length - 1) )
             }
-          }
-        };
-
-        let json = {};
-        json.teams = [
-          document.getElementById("team1").value,
-          document.getElementById("team2").value
-        ];
-        let team1 = document.getElementById("team1").value;
-        let team2 = document.getElementById("team2").value;
-        if(type == "normal")
-          xhttp.open("GET", "/omegaball/simulation/simulate-game.php?q="+JSON.stringify(json)+"&team1="+team1+"&team2="+team2, true);
-        else
-          xhttp.open("GET", "/omegaball/simulation/op/simulate-game.php?q="+JSON.stringify(json)+"&team1="+team1+"&team2="+team2, true);
-        xhttp.send();
+          },
+          "q="+JSON.stringify(args)
+        );
       }
 
       function processTimeSlice(timeSlice, end = false) {
@@ -133,17 +133,21 @@
 
         if( Object.hasOwn(timeSlice, "teams") ) {
           document.getElementById("teams").innerHTML = "";
-
-          let eo = 0;
-          let teams = timeSlice.teams;
-          for(let key in teams) {
-            displayTeam( teams[key], ((eo++%2==1)?"left":"right") );
-          }
+          displayTeams(timeSlice.teams);
         }
 
         // Show the control buttons again
         if(end) {
           document.getElementById("controller").style.display = "block";
+        }
+      }
+
+      function displayTeams(teams) {
+        document.getElementById("teams").innerHTML = "";
+
+        let eo = 0;
+        for(let key in teams) {
+          displayTeam( teams[key], ((eo++%2==1)?"left":"right") );
         }
       }
 
@@ -188,15 +192,6 @@
 
         teamsDiv.appendChild( team );
       }
-
-      function onClickTeam(args) {
-        if(args["selected"]) {
-          selectedTeams.push( args["teamIndex"] );
-        } else {
-
-        }
-      }
-
       var selectedTeams = [];
 
       document.addEventListener("DOMContentLoaded", function() {
@@ -204,29 +199,25 @@
           if (this.readyState != 4 || this.status != 200) return;
           data = JSON.parse(this.responseText);
 
-          let divisionElement = getDivisionElement({"onClickTeam":onClickTeam, "multiSelect": true});
+          let divisionElement = getDivisionElement({
+            "onClickTeam":function(args) {
+              if(args["selected"]) {
+                selectedTeams.push( args["teamIndex"] );
+              } else {
+                // Delete from array
+                selectedTeams.splice( selectedTeams.indexOf(args["teamIndex"]), 1 );
+              }
+            },
+            "multiSelect": true
+          });
+
+          // divisionElement.style.width = "100%";
+          divisionElement.classList.add("centered");
 
           document.getElementById("teamSelector").appendChild(divisionElement);
         });
       });
     </script>
-
-    <?php
-      function createSelector($id) {
-        require_once realpath($_SERVER["DOCUMENT_ROOT"])."/res/secure/database.php";
-        require_once realpath($_SERVER["DOCUMENT_ROOT"])."/res/lib.php";
-
-        echo "<select id='$id'>";
-        $conn = connectDB("newOmegaball");
-        $query = "SELECT teamName FROM Team WHERE league='The Alphaleague'";
-        $result = runQuery($conn, $query);
-        while ($row = $result->fetch_assoc()) {
-          $teamName = $row["teamName"];
-          echo "<option value='$teamName'>$teamName</option>";
-        }
-        echo "</select>";
-      }
-    ?>
   </head>
 
   <header>
@@ -238,7 +229,6 @@
   <body>
     <div id="controller">
       <div id="teamSelector"></div>
-      <button onclick="run()">Start Match</button><br>
 
       <select id="speed">
         <option value="0">Instant</option>
@@ -246,6 +236,7 @@
         <option value="800">10x</option>
         <option value="8000">1x</option>
       </select>
+      <button onclick="run()">Start Match</button>
     </div>
 
 

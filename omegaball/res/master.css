@@ -169,6 +169,11 @@ button {
   user-select: none; /* Standard syntax */
 }
 
+.centered {
+  margin-left: auto;
+  margin-right: auto;
+}
+
 @media screen and (min-width: 34em) {
   .league-grid {
     grid-template-columns: 1fr 1fr;
