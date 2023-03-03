@@ -128,7 +128,7 @@
 
         output.append(message);
 
-        window.scrollTo(0, document.body.scrollHeight);
+        // window.scrollTo(0, document.body.scrollHeight);
         output.scrollTop = output.scrollHeight;
 
         if( Object.hasOwn(timeSlice, "teams") ) {
