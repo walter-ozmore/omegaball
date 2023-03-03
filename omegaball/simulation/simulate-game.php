@@ -116,8 +116,11 @@
 
     loadMessages();
 
-    // Load teams in to our data
-    $data = loadData($args);
+    // echo var_dump($args);
+
+    // Load data
+    $loadDataArgs = ["teams"=>$args["teams"]];
+    $data = loadData($loadDataArgs);
 
     // Remove extra teams
     foreach( $data["teams"] as $teamIndex => $team ) {
@@ -136,10 +139,8 @@
     }
 
     // Setup game rules
-    $data["rules"]["useOutPoints"] = true;
-    $data["rules"]["defaultOutPointsAmmount"] = 2;
-
-    $data["rules"]["showBallPickup"] = false;
+    // echo var_dump($args);
+    $data["rules"] = $args["rules"];
 
     // Setup local varables
     addLocalVarables();
@@ -231,7 +232,7 @@
         $data["teams"][$teamIndex]["players"][$playerIndex]["inGame"] = true;
 
         if($data["rules"]["useOutPoints"] == true) {
-          $data["teams"][$teamIndex]["players"][$playerIndex]["outPoints"] = $data["rules"]["defaultOutPointsAmmount"];
+          $data["teams"][$teamIndex]["players"][$playerIndex]["outPoints"] = $data["rules"]["defaultOutPointsAmount"];
         }
       }
 

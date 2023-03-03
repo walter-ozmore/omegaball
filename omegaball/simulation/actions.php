@@ -19,9 +19,11 @@
   }
 
   function playerOPHit($player) {
-    $player["outPoints"] -= 1;
+    $player["outPoints"] = $player["outPoints"] - 1;
     if($player["outPoints"] <= 0)
       setPlayerOut($player);
+    else
+      save($player);
   }
 
   function playerHit($player) {
@@ -33,6 +35,8 @@
     }
 
     setPlayerOut($player);
+    $player["outPoints"] = $data["rules"]["defaultOutPointsAmount"];
+    save($player);
   }
 
 
@@ -46,7 +50,7 @@
     // Queue up options
     foreach($team["players"] as $player) {
       if($player["inGame"]) continue;
-      $options[] =$player;
+      $options[] = $player;
     }
 
     if(sizeof($options) > 0) {
@@ -172,7 +176,7 @@
     $data["ballsOnGround"] = $data["ballsOnGround"] - 1;
     save( $player );
 
-    if( $data["rules"]["showBallPickup"] )
+    if( $data["rules"]["displayPickupMessages"] )
       message( "player.pickUpBall", ["player"=>getPlayerDisplayName($player, false)] );
   }
 
