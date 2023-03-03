@@ -1,6 +1,6 @@
-function selectTeam(teamIndex) {
+function selectTeam(args) {
   // Select one and unselect all of the others
-  selectedTeam = teamIndex;
+  selectedTeam = args["teamIndex"];
 
   let team = data["teams"][selectedTeam];
 
@@ -45,7 +45,7 @@ function selectTeam(teamIndex) {
     playerEle.style.color = team["teamColor"];
     playerEle.style.cursor = "pointer";
     playerEle.onclick = function() {
-      drawPlayer(this, teamIndex, playerName);
+      drawPlayer(this, selectedTeam, playerName);
     };
     playerEle.innerHTML = player["playerName"];
 

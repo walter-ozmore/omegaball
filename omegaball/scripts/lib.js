@@ -243,7 +243,7 @@ function toggleHighlight(selectElement, checkElement=null) {
 
 function unHighlight(element, recursive = false) {
   if( recursive == true ) {
-    const elementsToUnhighlight = checkElement.querySelectorAll('*');
+    const elementsToUnhighlight = element.querySelectorAll('*');
 
     for(let index in elementsToUnhighlight) {
       let element = elementsToUnhighlight[index];
@@ -326,6 +326,7 @@ function getDivisionElement(args) {
       if(typeof args["onClickTeam"] === "function") {
         onClickTeam = args["onClickTeam"];
         onClickTeam({
+          "element": this,
           "teamIndex": team["acronym"],
           "selected": (teamNameEle.classList != undefined && teamNameEle.classList.contains("selected"))
         });
