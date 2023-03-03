@@ -31,13 +31,6 @@
         width: 100%;
       }
     </style>
-    <script>
-      function notify() {
-        let temp = createNotification();
-        let ele = mkEle("p", "hi");
-        temp.appendChild(ele);
-      }
-    </script>
   </head>
 
   <header>
@@ -46,7 +39,7 @@
     ?>
   </header>
 
-  <body onload="notify()">
+  <body>
   <div class="grid-container">
       <!-- Directory -->
       <div id="directory" class="border">
