@@ -1,11 +1,53 @@
 <?php
   require_once realpath($_SERVER["DOCUMENT_ROOT"])."/omegaball/res/lib.php";
-  // require_once realpath($_SERVER["DOCUMENT_ROOT"])."/omegaball/simulation/actions.php";
+  require_once "util.php";
+  require_once "actions.php";
 
+  /**
+   * Check if the game is over by any means
+   *
+   * @return boolean True if the game is over
+   */
   function isGameDone() {
+    global $data, $outputObj;
+
+    $teamsStillInGame = [];
+
+    // Check if there is only one team left
+    foreach( $data["teams"] as $teamObj ) {
+      $playersInGame = 0;
+
+      // for($y = 0;$y < sizeof($players);$y++) {
+      foreach( $teamObj["players"] as $playerIndex => $playerObj ) {
+        if($playerObj["inGame"])
+          $playersInGame += 1;
+      }
+
+      if($playersInGame > 0)
+        $teamsStillInGame[] = $teamObj;
+    }
+
+    if( sizeof($teamsStillInGame) == 0 ) {
+      $outputObj["game"][]["message"] = "<center><h2>No teams remain, tie</h2></center>";
+      return true;
+    }
+
+    if( sizeof($teamsStillInGame) == 1 ) {
+      $teamName = $teamsStillInGame[0]["teamName"];
+      $outputObj["game"][]["message"] = "<center><h2>$teamName wins, Game Over</h2></center>";
+      return true;
+    }
+
     return false;
   }
 
+
+  /**
+   * Create the action queue or the order actions, these are ordered by the
+   * players hustle. The actionQueue contains the player's names
+   *
+   * @return array actionQueue
+   */
   function createActionQueue() {
     global $data;
     $verbos = false;
@@ -62,10 +104,54 @@
     return $actionQueue;
   }
 
-  function runGame() {
-    global $data, $gameRunning;
+
+  /**
+   * Runs the game by preforming actions for each player until the game is
+   * finished. The game is finished when $gameRunning is false.
+   */
+  function runGame($args=[]) {
+    global $data, $outputObj, $gameRunning;
     $gameRunning = true;
-    $maxTurns = 2;
+    $maxTurns = 200;
+
+    loadMessages();
+
+    // echo var_dump($args);
+
+    // Load data
+    $loadDataArgs = ["teams"=>$args["teams"]];
+    $data = loadData($loadDataArgs);
+
+    // Remove extra teams
+    foreach( $data["teams"] as $teamIndex => $team ) {
+      $hit = false;
+
+      // Check if the team is in the array
+      foreach( $args["teams"] as $teamAcronym )
+        if( compare($teamIndex, $teamAcronym) ) {
+          $hit = true;
+          break;
+        }
+
+      // Skip if hit is true, AKA if the team was found in the args
+      if($hit) continue;
+      unset( $data["teams"][$teamIndex] );
+    }
+
+    // Setup game rules
+    // echo var_dump($args);
+    $data["rules"] = $args["rules"];
+
+    // Setup local varables
+    addLocalVarables();
+
+    // Check the given arguments
+    foreach($args as $key => $value) {}
+
+    $outputObj = [];
+    // Game is an array
+    $outputObj["game"] = [];
+    $outputObj["teams"] = $data["teams"];
 
     // Loop for a maximum of 30 turns, just incase of a infinite loop
     for($turnCounter = 0; $turnCounter < $maxTurns && $gameRunning; $turnCounter++) {
@@ -74,10 +160,22 @@
 
       foreach( $actionQueue as $action ) {
         action($action);
+        if($gameRunning == false)
+          break;
       }
     }
+
+    return $outputObj;
   }
 
+
+  /**
+   * Performs an action for the current player in the game.
+   *
+   * @param action The action to perform, which is assumed to be a player ID.
+   *
+   * @return void
+   */
   function action($action) {
     global $gameRunning, $data;
 
@@ -92,23 +190,23 @@
     $playerID = $action;
     $playerObj = getPlayer($playerID);
 
-    $displayName = getPlayerDisplayName( $playerObj );
-    echo $playerObj["hustle"] . " $displayName is taking their turn!<br>";
+    if($playerObj["inGame"] == false ) return;
 
     // Player makes a choice
 
     // If a player has no balls and there are balls on the ground, pick one up
-    // if( $playerObj["heldBalls"] == 0 && $data["ballsOnGround"] > 0 ) {
-    //   pickupBall($playerObj);
-    //   return;
-    // }
+    if( $data["ballsOnGround"] > 0  && ($playerObj["heldBalls"] == 0 || random() < .5)) {
+      pickupBall($playerObj);
+      return;
+    }
 
     // If the player has a ball, throw it
-    // if( $playerObj["heldBalls"] > 0 ) {
-    //   throwBall($playerObj);
-    //   return;
-    // }
+    if( $playerObj["heldBalls"] > 0 ) {
+      throwBall($playerObj);
+      return;
+    }
   }
+
 
   /**
    * Remove excess data to reduce package size
@@ -117,20 +215,28 @@
     return $data;
   }
 
-  /****************************************************************************
-   * Driver code goes here
-   ****************************************************************************/
 
-  // Load teams in to our data
-  $args = [];
-  $args["teams"][] = "MINO";
-  $args["teams"][] = "HEAV";
-  $data = loadData($args);
-  unset($args);
+  /**
+   * Adds local varables that are needed to run the simulation on the global
+   * data array
+   */
+  function addLocalVarables() {
+    global $data;
 
-  // Set balls on the ground of the arena
-  $data["ballsOnGround"] = 5;
+    // Set balls on the ground of the arena
+    $data["ballsOnGround"] = 1;
 
-  // createActionQueue();
-  runGame();
+    foreach( $data["teams"] as $teamIndex => $team ) {
+      foreach( $team["players"] as $playerIndex => $player ) {
+        $data["teams"][$teamIndex]["players"][$playerIndex]["heldBalls"] = 0;
+        $data["teams"][$teamIndex]["players"][$playerIndex]["inGame"] = true;
+
+        if($data["rules"]["useOutPoints"] == true) {
+          $data["teams"][$teamIndex]["players"][$playerIndex]["outPoints"] = $data["rules"]["defaultOutPointsAmount"];
+        }
+      }
+
+      $data["ballsOnGround"] += sizeof($team["players"]) / 5;
+    }
+  }
 ?>

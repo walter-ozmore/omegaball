@@ -3,126 +3,124 @@
   <head>
     <title>Account</title>
     <?php
-      require_once realpath($_SERVER["DOCUMENT_ROOT"])."/account/newlib.php";
-
-      function createSelector($id) {
-        echo "<select id='$id'>";
-        $conn = connectDB("omegaball");
-        $query = "SELECT teamName FROM Team WHERE league='The Alphaleague'";
-        $result = runQuery($conn, $query);
-        while ($row = $result->fetch_assoc()) {
-          $teamName = $row["teamName"];
-          echo "<option value='$teamName'>$teamName</option>";
-        }
-        echo "</select>";
-      }
+      require_once realpath($_SERVER["DOCUMENT_ROOT"])."/omegaball/res/head.php";
     ?>
-
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0">
-
-    <link rel="stylesheet" href="/omegaball/res/master.css">
-
-    <script>
-      function login() {
-        var http = new XMLHttpRequest();
-        var url = '/account/ajax/login.php';
-        http.open('POST', url, false);
-
-        //Send the proper header information along with the request
-        http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-
-        http.onreadystatechange = function() {
-          if(http.readyState == 4 && http.status == 200) {
-            var obj = JSON.parse( http.responseText );
-            console.log( obj.message );
-
-            if( obj.code != 0 ) {
-              document.getElementById("error").innerHTML = obj.message;
-            }
-          }
-        }
-
-        let uname = document.getElementById("uname").value;
-        let pword = document.getElementById("pword").value;
-
-        http.send("uname="+uname+"&pword="+pword);
-      }
-
-      function signup() {}
-
-      <?php
-        if($currentUser == null) {
-          echo "
-            login();
-          ";
-        }
-      ?>
-    </script>
 
     <style>
       .linksVertical a{
         display: block;
       }
     </style>
+
+    <script src="https://www.everyoneandeverything.org/account/lib.js"></script>
+    <script>
+      function login() {
+        // let uname = document.getElementById("uname").value;
+        let div = document.getElementById("login");
+        let uname = div.querySelector("[name='uname']").value;
+        let pword = div.querySelector("[name='pword']").value;
+
+        sendLoginRequest(uname, pword, false, function(obj){
+          ajax("/omegaball/ajax/fetch-user", function() {
+            if (this.readyState != 4 || this.status != 200) return;
+            let data = JSON.parse(this.responseText);
+            var user = data;
+            user["username"] = obj["username"];
+            console.log(user);
+
+          }, "uid="+obj["uid"]);
+        });
+      }
+
+      function createGrid() {
+        let notEle = document.createElement("div");
+        notEle.classList.add("notification");
+        notEle.style.width = "unset";
+        notEle.style.maxWidth = "unset";
+
+        let message = mkEle("h2", "Select a team to support");
+        message.style.marginLeft = "auto";
+        message.style.marginRight = "auto";
+        notEle.appendChild( message );
+
+        divisionElement = getDivisionElement();
+        divisionElement.style.marginBottom = "2em";
+        notEle.appendChild(divisionElement);
+
+        let confirmButton = document.createElement("button");
+        confirmButton.innerHTML = "Confirm Selection";
+        confirmButton.onclick = function() {
+          closeNotification( this );
+        };
+        notEle.appendChild(confirmButton);
+
+        document.body.appendChild( notEle );
+      }
+
+      function selectTeam(ele, divisionElement, teamIndex) {
+        // Select one and unselect all of the others
+        toggleHighlight( ele, divisionElement );
+      }
+
+      var data;
+      ajax("/omegaball/ajax/get-data.php", function() {
+        if (this.readyState != 4 || this.status != 200) return;
+        data = JSON.parse(this.responseText);
+        console.log(data);
+        createGrid();
+      });
+    </script>
   </head>
 
   <header>
-    <?php
-      require realpath($_SERVER["DOCUMENT_ROOT"])."/omegaball/res/header.php";
-    ?>
+    <?php require realpath($_SERVER["DOCUMENT_ROOT"])."/omegaball/res/header.php"; ?>
   </header>
 
   <body>
-    <div id="login" style="display: none">
+    <div id="login" class="border">
       <p class="error"></p>
 
-      <label>Username</label>
-      <input type="text" name="uname">
+      <label>Username:</label>
+      <input type="text" name="uname"><br><br>
 
-      <label>Password</label>
-      <input type="text" name="pword">
+      <label>Password:</label>
+      <input type="password" name="pword"><br><br>
 
-      <button>login</button>
+      <button onclick="login()">login</button>
     </div>
 
-
-    <div id="signup" style="display: none">
-      <label>Email</label>
-      <input type="text" name="email">
-
-      <label>Username</label>
-      <input type="text" name="uname">
-
-      <label>Password</label>
-      <input type="text" name="pword">
-
-      <label>Repeat Password</label>
-      <input type="text" name="rword">
-
-      <button>Sign Up</button>
-    </div>
-
-
-    <div class="linksVertical">
-      <a>Create Game</a>
-    </div>
-
-    <div style="display: block">
-      <div>
-        <h2>Teams</h2>
+    <!-- <div class="notification">
+      <h2>Select a team to support this season</h2>
+      <div class="league-grid">
         <div>
-          <p>The Agartha Spelunkers</p>
-          <p>The Elysium Orchards</p>
+          <h3>CHAOTIC EVIL</h3>
+          <p>THE AVALON TEMPLARS</p>
+          <p>THE AVALON TEMPLARS</p>
+          <p>THE AVALON TEMPLARS</p>
+          <p>THE AVALON TEMPLARS</p>
         </div>
-        <?php createSelector("teamSelector"); ?>
-        <button>+</button>
+        <div>
+          <h3>CHAOTIC EVIL</h3>
+          <p>THE AVALON TEMPLARS</p>
+          <p>THE AVALON TEMPLARS</p>
+          <p>THE AVALON TEMPLARS</p>
+          <p>THE AVALON TEMPLARS</p>
+        </div>
+        <div>
+          <h3>CHAOTIC EVIL</h3>
+          <p>THE AVALON TEMPLARS</p>
+          <p>THE AVALON TEMPLARS</p>
+          <p>THE AVALON TEMPLARS</p>
+          <p>THE AVALON TEMPLARS</p>
+        </div>
+        <div>
+          <h3>CHAOTIC EVIL</h3>
+          <p>THE AVALON TEMPLARS</p>
+          <p>THE AVALON TEMPLARS</p>
+          <p>THE AVALON TEMPLARS</p>
+          <p>THE AVALON TEMPLARS</p>
+        </div>
       </div>
-
-      <label>Start Date</label>
-      <input type="date"><br>
-
-      <label>Start Time</label>
-      <input type="time">
-    </div>
+    </div> -->
   </body>
 </html>

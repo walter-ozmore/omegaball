@@ -19,6 +19,10 @@
         padding: .5em;
       }
 
+      .hidden {
+        display: none;
+      }
+
 
       /* Desktop */
       @media screen and (min-width: 900px) {
@@ -30,9 +34,9 @@
           grid-auto-flow: column;
           grid-auto-columns: minmax(0, 1fr);
         }
-        .grid-container div {
+        /* .grid-container div {
           display: block;
-        }
+        } */
       }
     </style>
 
@@ -41,18 +45,18 @@
   </head>
 
   <header>
-    <?php require realpath($_SERVER["DOCUMENT_ROOT"])."\\omegaball\\res\\header.php"; ?>
+    <?php require realpath($_SERVER["DOCUMENT_ROOT"])."/omegaball/res/header.php"; ?>
   </header>
   <body>
     <div class="grid-container">
       <!-- Leagues/Divisions/Team -->
-      <div id="division" class="border"></div>
+      <div id="division" class="border hidden"></div>
 
       <!-- Team Info -->
-      <div id="team" class="border"></div>
+      <div id="team" class="border hidden"></div>
 
       <!-- Player -->
-      <div id="player" class="border"></div>
+      <div id="player" class="border hidden"></div>
     </div>
   </body>
 </html>

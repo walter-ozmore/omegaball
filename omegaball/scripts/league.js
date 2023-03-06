@@ -1,58 +1,13 @@
-
-/**
- * Draws the division section
- *
- * @todo Use global data object rather than the a seperate ajax request
- */
-function drawDivision() {
-  if (this.readyState != 4 || this.status != 200) return;
-  let txt = this.responseText;
-  var obj = JSON.parse(txt);
-
-  let divisionEle = document.getElementById("division");
-
-  for (let division in obj) {
-    // Draw division section
-    let header = document.createElement("h2");
-    header.innerHTML = division.toUpperCase();
-    divisionEle.appendChild( header );
-
-    // Draw all the teams in this section
-    let indentDiv = document.createElement("div");
-    indentDiv.classList.add("indent");
-
-    for(let team in obj[division]) {
-      team = obj[division][team];
-
-      // Draw team name
-      let teamEle = document.createElement("a");
-
-      teamEle.style.color = team["teamColor"];
-      teamEle.style.cursor = "pointer";
-      teamEle.innerHTML = team["teamName"].toUpperCase();
-      teamEle.onclick = function() {
-        selectTeam(this, team["acronym"]);
-      };
-
-      // This is needed as they need to be block style without extending
-      // to the entire width of the parent element
-      let outer = document.createElement("p");
-      outer.appendChild(teamEle)
-      indentDiv.appendChild( outer );
-    }
-
-    divisionEle.appendChild( indentDiv );
-  }
-}
-
-function selectTeam(ele, teamIndex) {
+function selectTeam(args) {
   // Select one and unselect all of the others
-  toggleHighlight( ele, document.getElementById("division") )
-  selectedTeam = teamIndex;
+  selectedTeam = args["teamIndex"];
 
   let team = data["teams"][selectedTeam];
 
   let teamEle = document.getElementById("team");
+  let playerEle = document.getElementById("player");
+  teamEle.style.display = "block";
+  playerEle.style.display = "none";
 
   // Clear element
   teamEle.innerHTML = "";
@@ -90,7 +45,7 @@ function selectTeam(ele, teamIndex) {
     playerEle.style.color = team["teamColor"];
     playerEle.style.cursor = "pointer";
     playerEle.onclick = function() {
-      drawPlayer(this, teamIndex, playerName);
+      drawPlayer(this, selectedTeam, playerName);
     };
     playerEle.innerHTML = player["playerName"];
 
@@ -106,6 +61,7 @@ function drawPlayer(ele, teamIndex, playerIndex) {
   toggleHighlight( ele, document.getElementById("playerList") );
   let player = data["teams"][teamIndex]["players"][playerIndex];
   let playerEle = document.getElementById("player");
+  playerEle.style.display = "block";
   playerEle.innerHTML = "";
 
   let nameEle = document.createElement("h2");
@@ -179,11 +135,13 @@ function getStatString(str, player, substats = []) {
 }
 
 function init() {
-  ajax("/omegaball/ajax/get-data.php", function() {
-    if (this.readyState != 4 || this.status != 200) return;
-    data = JSON.parse(this.responseText);
-  });
-  ajax("/omegaball/ajax/get-teams.php", drawDivision);
+
+  // ajax("/omegaball/ajax/get-teams.php", drawDivision);
+  let divisionContent = getDivisionElement({"noColumns":true, "onClickTeam":selectTeam});
+  divisionContent.style.width = "unset";
+  let divisionElement = document.getElementById("division");
+  divisionElement.appendChild(divisionContent);
+  divisionElement.style.display = "block";
 }
 
 var data = null;
@@ -193,5 +151,9 @@ var selectedPlayer = null;
 // Add document load event we use this method as window.onload is already
 // used and can not be added to
 document.addEventListener("DOMContentLoaded", function() {
-  init();
+  ajax("/omegaball/ajax/get-data.php", function() {
+    if (this.readyState != 4 || this.status != 200) return;
+    data = JSON.parse(this.responseText);
+    init();
+  });
 });

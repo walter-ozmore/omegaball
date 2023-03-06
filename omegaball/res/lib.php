@@ -49,6 +49,45 @@
           if( compare($playerIndex, $playerID) )
             return $team;
     }
+
+    if( array_key_exists("playerName", $args) ) {
+      $playerID = $args["playerName"];
+
+      foreach( $data["teams"] as $team )
+        foreach( $team["players"] as $playerIndex => $player )
+          if( compare($playerIndex, $playerID) )
+            return $team;
+    }
+  }
+
+
+  /**
+   * Save the given array back to the main data object
+   *
+   * @param mixed the array to be saved {player, save}
+   */
+  function save($arg) {
+    global $data;
+
+    if( array_key_exists("playerName", $arg) ) {
+      foreach( $data["teams"] as $teamIndex => $team )
+        foreach( $team["players"] as $playerIndex => $player )
+          // if( $arg["playerName"] == $playerIndex ) {
+          if( compare( $arg["playerName"], $playerIndex ) ) {
+            $data["teams"][$teamIndex]["players"][$playerIndex] = $arg;
+            return;
+          }
+      return;
+    }
+
+    if( array_key_exists("acronym", $arg) ) {
+      foreach( $data["teams"] as $teamIndex => $team )
+        if( compare( $arg["acronym"], $teamIndex ) ) {
+          $data["teams"][$teamIndex] = $arg;
+          return;
+        }
+      return;
+    }
   }
 
 
@@ -75,12 +114,12 @@
    * @param noExtra prevent extra information from being shown, such as when a
    * player is out of the game they are crossed out
    */
-  function getPlayerDisplayName($playerObj, $noExtra=false) {
+  function getPlayerDisplayName($playerObj, $extra=true) {
     $teamObj = getTeam( ["playerIndex"=>$playerObj["playerName"]] );
 
     $playerName = $playerObj["playerName"];
     $teamColor = $teamObj["teamColor"];
-    $extra = ( !array_key_exists("inGame", $playerObj) || $playerObj["inGame"] || $noExtra)? "" : "text-decoration: line-through white;";
+    $extra = ( !array_key_exists("inGame", $playerObj) || $playerObj["inGame"] || $extra)? "" : "text-decoration: line-through white;";
     $displayName = "<span style='color: $teamColor;$extra'>$playerName</span>";
 
     return $displayName;

@@ -187,13 +187,13 @@ function modifyColorBrightness(hexColor, amount) {
 /**
  * @brief Send an AJAX request to a server.
  *
- * This function sends an AJAX request to the specified URL using the POST method,
- * and executes the specified function when the response is received. The optional
- * arguments can be used to send data along with the request.
+ * This function sends an AJAX request to the specified URL using the POST
+ * method, and executes the specified function when the response is received.
+ * The optional arguments can be used to send data along with the request.
  *
  * @param {string} url The URL to send the request to.
  * @param {function} fun The function to execute when the response is received.
- * @param {string }args Optional arguments to send with the request.
+ * @param {string} args Optional arguments to send with the request.
  */
 function ajax(url, fun, args="") {
   let xhttp = new XMLHttpRequest();
@@ -227,20 +227,126 @@ function mkEle(type, innerHTML) {
  * @param {HTMLElement} checkElement - The element to remove the highlight class
  * from and all its child elements.
  */
-function toggleHighlight(selectElement, checkElement) {
-  // Validate input
-  if (!selectElement instanceof HTMLElement || !checkElement instanceof HTMLElement) {
-    throw new Error('Invalid input: selectElement and checkElement must be HTMLElements');
+function toggleHighlight(selectElement, checkElement=null) {
+  if( checkElement != null ) {
+    unHighlight(checkElement, true)
   }
-
-  // Remove the highlight class from the check element and all its child elements
-  const elementsToUnhighlight = checkElement.querySelectorAll('*');
-  elementsToUnhighlight.forEach((el) => el.classList.remove('selected'));
+  // selectedElement.classList != undefined && selectedElement.classList.contains("selected")
 
   // Add the highlight class to the selected element
-  selectElement.classList.add('selected');
+  if( selectElement.classList != undefined && selectElement.classList.contains("selected")) {
+    unHighlight(selectElement);
+    return;
+  }
+  highlight(selectElement);
 }
 
+function unHighlight(element, recursive = false) {
+  if( recursive == true ) {
+    const elementsToUnhighlight = element.querySelectorAll('*');
+
+    for(let index in elementsToUnhighlight) {
+      let element = elementsToUnhighlight[index];
+      unHighlight(element);
+    }
+  }
+
+  if( element.classList == undefined) return;
+
+  if( element.classList.contains("selected") ) {
+    element.classList.remove("selected");
+    element.style.color = element.style.backgroundColor;
+    element.style.backgroundColor = "unset";
+  }
+}
+
+function highlight(element) {
+  if( element.classList != undefined && element.classList.contains("selected"))
+    return;
+  element.classList.add('selected');
+
+  element.style.backgroundColor = element.style.color;
+  element.style.color = "black";
+}
+
+function mergeArgs(defaultArgs, args) {
+  // Make a copy of the default arguments object
+  const mergedArgs = { ...defaultArgs };
+
+  // Merge the arguments from the second object
+  for (const key in args) {
+    if (args.hasOwnProperty(key)) {
+      mergedArgs[key] = args[key];
+    }
+  }
+
+  return mergedArgs;
+}
+
+
+
+function getDivisionElement(args) {
+  defaultArgs = {
+    "multiSelect": false,
+    "noColumns": false,
+    "onClickTeam": undefined
+  };
+  args = mergeArgs(defaultArgs, args);
+
+  let gridDiv = document.createElement("div");
+  gridDiv.classList.add("league-grid");
+  if( args["noColumns"] == true )
+    gridDiv.style.gridTemplateColumns = "1fr";
+
+  let divElements = [];
+
+  for(let acronym in data["teams"]) {
+    let team = data["teams"][acronym];
+    let division = team.division;
+    let ele = divElements[division];
+
+    if( ele == undefined ) {
+      ele = document.createElement("div");
+      ele.appendChild( mkEle("h3", team["division"]) );
+      gridDiv.appendChild( ele );
+      divElements[division] = ele;
+    }
+
+    let teamNameEle = document.createElement("p");
+    teamNameEle.classList.add("prevent-select");
+    teamNameEle.style.color = team["teamColor"] ;
+    teamNameEle.style.cursor = "pointer";
+    teamNameEle.innerHTML = team["teamName"];
+    teamNameEle.onclick = function() {
+      if(args["multiSelect"]) {
+        toggleHighlight(teamNameEle);
+      } else {
+        toggleHighlight( teamNameEle, gridDiv );
+      }
+
+      if(typeof args["onClickTeam"] === "function") {
+        onClickTeam = args["onClickTeam"];
+        onClickTeam({
+          "element": this,
+          "teamIndex": team["acronym"],
+          "selected": (teamNameEle.classList != undefined && teamNameEle.classList.contains("selected"))
+        });
+      }
+    };
+    ele.appendChild( teamNameEle );
+  }
+
+  return gridDiv;
+}
+
+
+function fetchData() {
+  ajax("/omegaball/ajax/get-data.php", function() {
+    if (this.readyState != 4 || this.status != 200) return;
+    var data = JSON.parse(this.responseText);
+    console.log(data);
+  });
+}
 
 window.onload = function() {
   checkNotify();

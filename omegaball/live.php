@@ -13,6 +13,10 @@
         width: 100%;
       }
 
+      .team {
+        margin: 0 1em 0 1em;
+      }
+
       .output {
         padding: 4em;
         max-height: 40em;
@@ -60,127 +64,27 @@
       .dropdown:hover {background-color: rgba(255, 255, 255, .1);}
     </style>
 
+    <script src="/omegaball/scripts/live.js"></script>
     <script>
-      function run() {
-        document.getElementById("controller").style.display = "none";
+      function createOption(id, label, options={"true":"True", "false":"False"}) {
+        // id = id.toLowerCase();
 
-        var xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function() {
-          if (this.readyState == 4 && this.status == 200) {
-            let txt = this.responseText;
-            var obj = JSON.parse(txt);
-            console.log(obj);
-
-            let output = document.getElementById("output");
-
-            // Clear info
-            output.innerHTML = "";
-            document.getElementById("teams").innerHTML = "";
-
-            let delayTime = document.getElementById("speed").value;
-            for(let x=0;x<obj.game.length;x++) {
-              setTimeout(
-                function () {
-                  processTimeSlice( obj.game[x], (x == obj.game.length - 1) )
-                }, delayTime * x);
-            }
-
-            // Display teams
-            for(let x=0;x<obj.teams.length;x++) {
-              displayTeam( obj.teams[x] );
-            }
-          }
-        };
-
-        let json = {};
-        json.teams = [
-          document.getElementById("team1").value,
-          document.getElementById("team2").value
-        ];
-        let team1 = document.getElementById("team1").value;
-        let team2 = document.getElementById("team2").value;
-        xhttp.open("GET", "/omegaball/simulation/simulate-game.php?q="+JSON.stringify(json)+"&team1="+team1+"&team2="+team2, true);
-        xhttp.send();
-      }
-
-      function processTimeSlice(timeSlice, end = false) {
-        let output = document.getElementById("output");
-
-        let message = document.createElement("p");
-        message.innerHTML = timeSlice.message;
-
-        output.append(message);
-
-        window.scrollTo(0, document.body.scrollHeight);
-        output.scrollTop = output.scrollHeight;
-
-        if( Object.hasOwn(timeSlice, "data") ) {
-          document.getElementById("teams").innerHTML = "";
-
-          let obj = timeSlice.data;
-          for(let x=0;x<obj.length;x++) {
-            displayTeam( obj[x] );
-          }
+        let optionsStr = "";
+        for (const [key, value] of Object.entries(options)) {
+          optionsStr += `<option value="${key}">${value}</option>`;
         }
 
-        // Show the control buttons again
-        if(end) {
-          document.getElementById("controller").style.display = "block";
-        }
-      }
+        let innerHTML = `
+          <label>${label}</label>
+          <select id='${id}'>
+            ${optionsStr}
+          </select><br>
+        `;
 
-      function displayTeam(teamData) {
-        let teamsDiv = document.getElementById("teams");
-
-        let team = document.createElement("div");
-        team.style.color = teamData.teamColor;
-
-        let teamName = document.createElement("h2");
-        teamName.innerHTML += teamData.teamName;
-        team.appendChild( teamName );
-
-        for(let x=0;x<teamData.players.length;x++) {
-          let playerData = teamData.players[x];
-          // console.log( playerData );
-
-          let player = document.createElement("p");
-          if( playerData.inGame == false ) {
-            let dim = modifyColorBrightness( teamData.teamColor, 0.65 );
-            console.log( teamData.teamColor + " => "+dim )
-            player.style.color = dim;
-            player.style.textDecoration = 'line-through';
-          }
-
-          let extra = "";
-          for(let x=0;x<playerData.heldBalls;x++) {
-            extra += "*";
-          }
-
-          player.classList.add("indent");
-          player.innerHTML += playerData.playerName + extra;
-          team.appendChild( player );
-        }
-
-        teamsDiv.appendChild( team );
+        document.getElementById("settings").innerHTML += innerHTML;
+        optionElements.push( id );
       }
     </script>
-
-    <?php
-      function createSelector($id) {
-        require_once realpath($_SERVER["DOCUMENT_ROOT"])."/res/secure/database.php";
-        require_once realpath($_SERVER["DOCUMENT_ROOT"])."/res/lib.php";
-
-        echo "<select id='$id'>";
-        $conn = connectDB("newOmegaball");
-        $query = "SELECT teamName FROM Team WHERE league='The Alphaleague'";
-        $result = runQuery($conn, $query);
-        while ($row = $result->fetch_assoc()) {
-          $teamName = $row["teamName"];
-          echo "<option value='$teamName'>$teamName</option>";
-        }
-        echo "</select>";
-      }
-    ?>
   </head>
 
   <header>
@@ -190,21 +94,16 @@
   </header>
 
   <body>
-    <div id="teams" class="teams"></div>
+    <div id="controller">
+      <div id="teamSelector"></div>
+      <div id="settings"></div>
 
-    <center>
-      <div id="controller">
-        <?php createSelector("team1"); ?>
-        <button onclick="run()" id="start-button">Start Match</button>
-        <?php createSelector("team2"); ?>
-        <select id="speed">
-          <option value="10">Near Instant (1/100s)</option>
-          <option value="100">Faster (1/10s)</option>
-          <option value="1000">Fast (1s)</option>
-          <option value="8000">Normal (8s)</option>
-        </select>
-      </div>
-    </center>
+      <button onclick="run()">Start Match</button>
+    </div>
+
+
+    <div id="teams" class="teams"></div>
+    <div id="stats"></div>
     <div class="output" id="output"></div>
   </body>
 </html>
