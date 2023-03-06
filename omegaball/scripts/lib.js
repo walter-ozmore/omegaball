@@ -23,10 +23,14 @@ function checkSelected() {
   let links = document.getElementById("links");
   let url = window.location.href.split('?')[0];
 
+  let location = url.substring( url.indexOf("/omegaball/") + "/omegaball/".length );
+  location = location.substring(0, location.indexOf("/"));
+
   var children = links.children;
   for (var i = 0; i < children.length; i++) {
     var child = children[i];
-    if(url.toUpperCase().endsWith( "/" + child.innerHTML.toUpperCase() )) {
+    console.log( child.innerHTML.toUpperCase()+" "+location.toUpperCase() );
+    if(child.innerHTML.toUpperCase() == location.toUpperCase()) {
       child.classList.add("selected");
     }
   }
