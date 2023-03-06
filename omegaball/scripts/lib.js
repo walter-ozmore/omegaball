@@ -21,6 +21,7 @@ function addNavLink(name, url) {
  */
 function checkSelected() {
   let links = document.getElementById("links");
+  if(links == undefined) return;
   let url = window.location.href.split('?')[0];
 
   var children = links.children;
@@ -205,6 +206,22 @@ function ajax(url, fun, args="") {
 }
 
 
+function makeSyncAjaxRequest(url, args="") {
+  try {
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', url, false);
+    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhr.send(args);
+
+    if (xhr.status === 200) {
+      return xhr.responseText;
+    }
+    return null;
+  } catch (error) {
+    return null;
+  }
+}
+
 /**
  * A quick way to create an element with innerHTML set
  *
@@ -348,7 +365,44 @@ function fetchData() {
   });
 }
 
+
+/** Account stuff */
+class Accounts {
+  static accounts = {};
+
+  static getAccount(uid) {
+    if( this.accounts[uid] != null ) {
+      return this.accounts[uid];
+    }
+    this.accounts[uid] = this.#loadAccount(uid);
+    return this.accounts[uid];
+  }
+
+  static #loadAccount(uid) {
+    console.log("Fetching UID: "+uid);
+    let txt = makeSyncAjaxRequest("/omegaball/ajax/fetch-user.php", "uid="+uid);
+    return JSON.parse( txt );
+  }
+
+  static ajaxReturn() {}
+
+  static currentUserReturn() {}
+
+  static loadCurrentUser() {
+    var currentUser = Accounts.#loadAccount(8);
+    // Select all elements with the name "test"
+    const elements = document.getElementsByName("cu-username");
+
+    // Loop through each element and set its inner HTML to "hello"
+    for (let i = 0; i < elements.length; i++) {
+      elements[i].innerHTML = currentUser.username;;
+    }
+    return this.getAccount(8);
+  }
+}
+
 window.onload = function() {
   checkNotify();
   checkSelected();
+  Accounts.loadCurrentUser();
 };

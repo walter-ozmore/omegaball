@@ -45,3 +45,7 @@
   <a href="/omegaball/account">ACCOUNT</a>
   <a href="/omegaball/console">CONSOLE</a>
 </div>
+
+<div style="position: absolute; right: 1em; top: 0em;">
+  <p name="cu-username"></p>
+</div>
