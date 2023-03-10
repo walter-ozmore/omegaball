@@ -51,6 +51,7 @@ class Accounts {
 
   static currentUserReturn() {
     if (this.readyState != 4 || this.status != 200) return;
+    if(this.responseText.length <= 0) return;
     let currentUser = JSON.parse(this.responseText);
 
     Accounts.accounts[currentUser["uid"]] = currentUser;
