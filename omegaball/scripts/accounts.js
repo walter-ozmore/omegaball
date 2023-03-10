@@ -56,10 +56,28 @@ class Accounts {
 
     Accounts.accounts[currentUser["uid"]] = currentUser;
 
+    let elements;
+
     // Select all elements with the name "test"
-    let elements = document.getElementsByName("cu-username");
+    elements = document.getElementsByName("cu-username");
     for (let i = 0; i < elements.length; i++) {
-      elements[i].innerHTML = currentUser.username;;
+      let ele = elements[i];
+      ele.innerHTML = currentUser.username;
+      ele.style.display = "block";
+    }
+
+    elements = document.getElementsByName("cu-currency");
+    for (let i = 0; i < elements.length; i++) {
+      let ele = elements[i];
+      ele.innerHTML = currentUser.currency;
+      ele.style.display = "block";
+    }
+
+    elements = document.getElementsByName("cu-team");
+    for (let i = 0; i < elements.length; i++) {
+      let ele = elements[i];
+      ele.innerHTML = currentUser.team;
+      ele.style.display = "block";
     }
   }
 }

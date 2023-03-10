@@ -46,6 +46,8 @@
   <a href="/omegaball/console">CONSOLE</a>
 </div>
 
-<div style="position: absolute; right: 1em; top: 0em;">
+<div style="position: absolute; right: 1em; top: 0em;text-align: right">
   <p name="cu-username"></p>
+  <p name="cu-team"></p>
+  <p name="cu-currency"></p>
 </div>

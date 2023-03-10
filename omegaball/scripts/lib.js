@@ -329,7 +329,6 @@ function onWindowLoad(func) {
 
 
 
-
 // Global
 var data;
 var windowLoadedFunctions = [ checkSelected ];
