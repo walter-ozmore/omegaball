@@ -73,29 +73,43 @@ function drawPlayer(ele, teamIndex, playerIndex) {
   statsEle.classList.add("indent");
   playerEle.appendChild(statsEle);
 
-  let str, outOf;
+  statsEle.appendChild(mkEle("p", getStatString(
+    "POW: ",
+    player,
+    ["tendons", "animus", "cruelty"]
+  )));
 
+  statsEle.appendChild(mkEle("p", getStatString(
+    "ACC: ",
+    player,
+    ["foresight", "grandeur", "markovianism", "cruelty"]
+  )));
 
-  str = getStatString("POW: ", player, ["tendons", "animus", "cruelty"]);
-  statsEle.appendChild(mkEle("p", str));
+  statsEle.appendChild(mkEle("p", getStatString(
+    "DEF: ",
+    player,
+    ["authority", "endurance", "mystique", "pluckiness"]
+  )));
 
-  str = getStatString("ACC: ", player, ["foresight", "grandeur", "markovianism", "cruelty"]);
-  statsEle.appendChild(mkEle("p", str));
+  statsEle.appendChild(mkEle("p", getStatString(
+    "FIN: ",
+    player,
+    ["celerity", "hustle", "incorporeality", "poise"]
+  )));
 
-  str = getStatString("DEF: ", player, ["authority", "endurance", "mystique", "pluckiness"]);
-  statsEle.appendChild(mkEle("p", str));
+  statsEle.appendChild(mkEle("p", getStatString(
+    "CHM: ",
+    player,
+    []
+  )));
 
-  str = getStatString("FIN: ", player, ["celerity", "hustle", "incorporeality", "poise"]);
-  statsEle.appendChild(mkEle("p", str));
+  statsEle.appendChild(mkEle("p", getStatString(
+    "RAT: ",
+    player,
+    []
+  )));
 
-  str = getStatString("CHM: ", player, []);
-  statsEle.appendChild(mkEle("p", str));
-
-  str = getStatString("RAT: ", player, []);
-  statsEle.appendChild(mkEle("p", str));
-
-
-  outOf = 10;
+  let str, outOf = 10;
   str = "ENTROPY: <span style='color: green'>";
   for(let x=1;x<=10;x++) {
     if( x > player["entropy"] * outOf )
@@ -105,6 +119,15 @@ function drawPlayer(ele, teamIndex, playerIndex) {
   playerEle.appendChild( mkEle("p", str) );
 }
 
+
+/**
+ * Calculates the display stat number from the stats of the player
+ *
+ * @param {string} str
+ * @param {object} player
+ * @param {array} substats
+ * @returns
+ */
 function getStatString(str, player, substats = []) {
   // Calculate average
   let amount = 0;
@@ -134,26 +157,15 @@ function getStatString(str, player, substats = []) {
   return str;
 }
 
-function init() {
-
-  // ajax("/omegaball/ajax/get-teams.php", drawDivision);
-  let divisionContent = getDivisionElement({"noColumns":true, "onClickTeam":selectTeam});
-  divisionContent.style.width = "unset";
-  let divisionElement = document.getElementById("division");
-  divisionElement.appendChild(divisionContent);
-  divisionElement.style.display = "block";
-}
-
-var data = null;
-var selectedTeam = null;
-var selectedPlayer = null;
-
-// Add document load event we use this method as window.onload is already
-// used and can not be added to
-document.addEventListener("DOMContentLoaded", function() {
-  ajax("/omegaball/ajax/get-data.php", function() {
-    if (this.readyState != 4 || this.status != 200) return;
-    data = JSON.parse(this.responseText);
-    init();
+onWindowLoad(function() {
+  fetchData(function() {
+    let divisionContent = getDivisionElement({"noColumns":true, "onClickTeam":selectTeam});
+    divisionContent.style.width = "unset";
+    let divisionElement = document.getElementById("division");
+    divisionElement.appendChild(divisionContent);
+    divisionElement.style.display = "block";
   });
 });
+
+var selectedTeam = null;
+var selectedPlayer = null;

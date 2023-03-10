@@ -21,6 +21,7 @@ function addNavLink(name, url) {
  */
 function checkSelected() {
   let links = document.getElementById("links");
+  if(links == undefined) return;
   let url = window.location.href.split('?')[0];
 
   var children = links.children;
@@ -32,102 +33,6 @@ function checkSelected() {
   }
 }
 
-
-/**
- * @brief Creates a new notification element and appends it to the body of the
- * document.
- *
- * This function creates a new <div> element with the class "notification",
- * appends it to the body of the document, and then returns a reference to the
- * new element.
- *
- * @return A reference to the newly created notification element.
- */
-function createNotification() {
-  let notEle = document.createElement("div");
-  notEle.classList.add("notification");
-  document.body.appendChild( notEle );
-
-  return notEle;
-}
-
-
-/**
- * Check if there is any notifications that should be displayed then displays
- * the relevant notifications
- */
-function checkNotify() {
-  var xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function() {
-    if (this.readyState != 4 || this.status != 200) return;
-    let obj;
-    try {
-      obj = JSON.parse( this.responseText );
-    } catch(e) {
-      console.log( this.responseText );
-      return;
-    }
-
-    // Disabled because annoying
-    // notifyChampionshipWin( obj.acronym, obj.teamName, "OKAY" );
-  };
-  xhttp.open("GET", "/omegaball/ajax/notify.php", true);
-  xhttp.send();
-}
-
-function notifyChampionshipWin(acronym, name, buttonText) {
-  let ele = createNotification();
-
-  // Add image to the notification
-  let img = document.createElement("img");
-  img.src = "/omegaball/res/graphics/teams/"+ acronym.toLowerCase() +"/icon.png";
-  img.onerror = function(){
-    console.log("file with "+url+" invalid. Using default image.");
-    img.src = "/omegaball/res/graphics/teams/unsorted/bodies-icon.png";
-  }
-  ele.appendChild( img );
-
-  // Add top text
-  let topText = document.createElement("p");
-  topText.innerHTML = name.toUpperCase() +" HAVE WON THE SEASON 1 CHAMPIONSHIP!";
-  ele.appendChild( topText );
-
-  // Add bottom text
-  let bottomText = document.createElement("p");
-  bottomText.innerHTML = "THE PRIZE AUCTION WILL COMMENCE SHORTLY.";
-  ele.appendChild( bottomText );
-
-  // Add button
-  let button = document.createElement("button");
-  button.innerHTML = buttonText;
-  button.onclick = function() {
-    closeNotification(this);
-  };
-  ele.appendChild( button );
-}
-
-
-/**
- * @brief Deletes the first ancestor element with the "notification" class that
- * contains the given element.
- *
- * This function traverses up the document tree from the given element until it
- * finds an element with the "notification" class, and then deletes that
- * element. If no such element is found, this function does nothing.
- *
- * @param element The element to start the search from.
- */
-function closeNotification(element) {
-  // Go up untill you find an element with the class of notification
-  let ancestor = element.parentNode;
-  while (ancestor != null) {
-    if (ancestor.classList.contains('notification')) {
-      ancestor.remove();
-      return;
-    }
-    ancestor = ancestor.parentNode;
-  }
-}
 
 
 /**
@@ -202,6 +107,23 @@ function ajax(url, fun, args="") {
   xhttp.open("POST", url, true);
   xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   xhttp.send(args);
+}
+
+
+function syncAjax(url, args="") {
+  try {
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', url, false);
+    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhr.send(args);
+
+    if (xhr.status === 200) {
+      return xhr.responseText;
+    }
+    return null;
+  } catch (error) {
+    return null;
+  }
 }
 
 
@@ -283,9 +205,32 @@ function mergeArgs(defaultArgs, args) {
   return mergedArgs;
 }
 
+function getSelectedElements(element) {
+  var selectedElements = [];
+  var childNodes = element.childNodes;
 
+  for (var i = 0; i < childNodes.length; i++) {
+    var childNode = childNodes[i];
+
+    if (childNode.nodeType === Node.ELEMENT_NODE) {
+      var classList = childNode.classList;
+
+      if (classList.contains('selected')) {
+        selectedElements.push(childNode.innerHTML);
+      }
+
+      if (childNode.hasChildNodes()) {
+        let sub = getSelectedElements(childNode);
+        selectedElements = selectedElements.concat(sub);
+      }
+    }
+  }
+
+  return selectedElements;
+}
 
 function getDivisionElement(args) {
+  // Check arguments
   defaultArgs = {
     "multiSelect": false,
     "noColumns": false,
@@ -293,6 +238,14 @@ function getDivisionElement(args) {
   };
   args = mergeArgs(defaultArgs, args);
 
+  // Check if data is loaded
+  if(data == undefined) {
+    console.warn("Warning: getDivisionElement was called but data is undefined. Fetching data synchronously. This should be avoided.");
+    syncFetchData();
+    return;
+  }
+
+  // Create the grid element
   let gridDiv = document.createElement("div");
   gridDiv.classList.add("league-grid");
   if( args["noColumns"] == true )
@@ -340,15 +293,51 @@ function getDivisionElement(args) {
 }
 
 
-function fetchData() {
+function fetchData(func, async=true) {
+  if(!async) {
+    let text = syncAjax("/omegaball/ajax/get-data.php");
+    data = JSON.parse( text );
+    return;
+  }
+
   ajax("/omegaball/ajax/get-data.php", function() {
     if (this.readyState != 4 || this.status != 200) return;
-    var data = JSON.parse(this.responseText);
-    console.log(data);
+    data = JSON.parse(this.responseText);
+    func();
   });
 }
 
+function syncFetchData() {
+  let text = syncAjax("/omegaball/ajax/get-data.php");
+  data = JSON.parse( text );
+}
+
+
+/**
+ * Runs the given function when the window loads, if the
+ * window is already loaded it will just run the function
+ *
+ * @param {function} func
+ */
+function onWindowLoad(func) {
+  if(windowLoaded == false) {
+    windowLoadedFunctions.push(func);
+    return;
+  }
+  func();
+}
+
+
+
+// Global
+var data;
+var windowLoadedFunctions = [ checkSelected ];
+var windowLoaded = false;
+
+// Run all window load functions
 window.onload = function() {
-  checkNotify();
-  checkSelected();
+  windowLoaded = true;
+  for(let i=0; i<windowLoadedFunctions.length; i++) {
+    windowLoadedFunctions[i]();
+  }
 };
