@@ -23,7 +23,7 @@
       }
     </style>
 
-    <script src="/account/lib.js"></script>
+    <script src="/account/version-3/lib.js"></script>
     <script>
       function loginButton() {
         document.getElementById("login").style.display = "none";

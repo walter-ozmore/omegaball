@@ -8,7 +8,7 @@ class Accounts {
   static loadCurrentUser(uid = null) {
     // Grab the current user id if it is found
     if(uid == null) {
-      ajax("/account/ajax/get-current-user", function() {
+      ajax("/account/version-3/ajax/get-current-user", function() {
         if (this.readyState != 4 || this.status != 200) return;
         Accounts.loadCurrentUser(this.responseText);
       });
