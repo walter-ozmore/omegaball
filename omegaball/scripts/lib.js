@@ -138,9 +138,10 @@ function syncAjax(url, args="") {
  * @param {string} innerHTML
  * @returns The created element
  */
-function mkEle(type, innerHTML) {
+function mkEle(type, innerHTML=null) {
   let ele = document.createElement(type);
-  ele.innerHTML = innerHTML;
+  if(innerHTML !== null)
+    ele.innerHTML = innerHTML;
   return ele;
 }
 

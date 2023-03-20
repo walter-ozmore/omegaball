@@ -58,7 +58,6 @@ class Accounts {
 
     let elements;
 
-    // Select all elements with the name "test"
     elements = document.getElementsByName("cu-username");
     for (let i = 0; i < elements.length; i++) {
       let ele = elements[i];
