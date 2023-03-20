@@ -10,65 +10,41 @@
       .linksVertical a{
         display: block;
       }
+
+      .border {
+        width: auto;
+        max-width: 20em;
+        margin: .5em;
+        padding: .5em;
+      }
+
+      .error {
+        color: red;
+      }
     </style>
 
-    <script src="https://www.everyoneandeverything.org/account/lib.js"></script>
+    <script src="/account/version-3/lib.js"></script>
     <script>
-      function login() {
-        // let uname = document.getElementById("uname").value;
-        let div = document.getElementById("login");
-        let uname = div.querySelector("[name='uname']").value;
-        let pword = div.querySelector("[name='pword']").value;
-
-        sendLoginRequest(uname, pword, false, function(obj){
-          ajax("/omegaball/ajax/fetch-user", function() {
-            if (this.readyState != 4 || this.status != 200) return;
-            let data = JSON.parse(this.responseText);
-            var user = data;
-            user["username"] = obj["username"];
-            console.log(user);
-
-          }, "uid="+obj["uid"]);
+      function loginButton() {
+        document.getElementById("login").style.display = "none";
+        document.getElementById("sign-up").style.display = "none";
+        account_login(function(data) {
+          if(data["code"] == 0) {
+            Accounts.loadCurrentUser();
+          }
         });
       }
 
-      function createGrid() {
-        let notEle = document.createElement("div");
-        notEle.classList.add("notification");
-        notEle.style.width = "unset";
-        notEle.style.maxWidth = "unset";
-
-        let message = mkEle("h2", "Select a team to support");
-        message.style.marginLeft = "auto";
-        message.style.marginRight = "auto";
-        notEle.appendChild( message );
-
-        divisionElement = getDivisionElement();
-        divisionElement.style.marginBottom = "2em";
-        notEle.appendChild(divisionElement);
-
-        let confirmButton = document.createElement("button");
-        confirmButton.innerHTML = "Confirm Selection";
-        confirmButton.onclick = function() {
-          closeNotification( this );
-        };
-        notEle.appendChild(confirmButton);
-
-        document.body.appendChild( notEle );
+      function signupButton() {
+        document.getElementById("login").style.display = "none";
+        document.getElementById("sign-up").style.display = "none";
+        account_signup(function(data) {
+          if(data["code"] == 0) {
+            Accounts.loadCurrentUser();
+            return;
+          }
+        }, "omegaball");
       }
-
-      function selectTeam(ele, divisionElement, teamIndex) {
-        // Select one and unselect all of the others
-        toggleHighlight( ele, divisionElement );
-      }
-
-      var data;
-      ajax("/omegaball/ajax/get-data.php", function() {
-        if (this.readyState != 4 || this.status != 200) return;
-        data = JSON.parse(this.responseText);
-        console.log(data);
-        createGrid();
-      });
     </script>
   </head>
 
@@ -78,7 +54,7 @@
 
   <body>
     <div id="login" class="border">
-      <p class="error"></p>
+      <p class="error" name="error"></p>
 
       <label>Username:</label>
       <input type="text" name="uname"><br><br>
@@ -86,41 +62,26 @@
       <label>Password:</label>
       <input type="password" name="pword"><br><br>
 
-      <button onclick="login()">login</button>
+      <button onclick="loginButton()">login</button>
     </div>
 
-    <!-- <div class="notification">
-      <h2>Select a team to support this season</h2>
-      <div class="league-grid">
-        <div>
-          <h3>CHAOTIC EVIL</h3>
-          <p>THE AVALON TEMPLARS</p>
-          <p>THE AVALON TEMPLARS</p>
-          <p>THE AVALON TEMPLARS</p>
-          <p>THE AVALON TEMPLARS</p>
-        </div>
-        <div>
-          <h3>CHAOTIC EVIL</h3>
-          <p>THE AVALON TEMPLARS</p>
-          <p>THE AVALON TEMPLARS</p>
-          <p>THE AVALON TEMPLARS</p>
-          <p>THE AVALON TEMPLARS</p>
-        </div>
-        <div>
-          <h3>CHAOTIC EVIL</h3>
-          <p>THE AVALON TEMPLARS</p>
-          <p>THE AVALON TEMPLARS</p>
-          <p>THE AVALON TEMPLARS</p>
-          <p>THE AVALON TEMPLARS</p>
-        </div>
-        <div>
-          <h3>CHAOTIC EVIL</h3>
-          <p>THE AVALON TEMPLARS</p>
-          <p>THE AVALON TEMPLARS</p>
-          <p>THE AVALON TEMPLARS</p>
-          <p>THE AVALON TEMPLARS</p>
-        </div>
-      </div>
-    </div> -->
+    <div id="sign-up" class="border">
+      <p class="error" name="error"></p>
+
+      <label>Email:</label>
+      <input type="text" name="email"><br><br>
+
+      <label>Username:</label>
+      <input type="text" name="uname"><br><br>
+
+      <label>Password:</label>
+      <input type="password" name="pword"><br><br>
+
+      <label>Repeat Password:</label>
+      <input type="password" name="rword"><br><br>
+
+      <button onclick="signupButton()">Sign Up</button>
+    </div>
+    <button onclick="showTeamSelectionNotification()">Select Team</button>
   </body>
 </html>
