@@ -6,11 +6,16 @@ class Accounts {
     Accounts.loadCurrentUser();
   }
 
-  static loadCurrentUser() {
+  static loadCurrentUser(returnFunction=null) {
     ajax("/account/version-3/ajax/get-current-user", function() {
       if (this.readyState != 4 || this.status != 200) return;
       let uid = this.responseText;
       Accounts.loadAccount(uid, function(user) {
+        Accounts.currentUser = user;
+        if(returnFunction != null) {
+          returnFunction(user);
+        }
+
         // Update all current user elements
         let elements;
 
@@ -51,7 +56,7 @@ class Accounts {
     let accounts = this.accounts;
 
     if( forceUpdate == false && accounts[uid] != null ) {
-      returnFunction(uid);
+      returnFunction(accounts[uid]);
     }
 
     console.log("Fetching UID: "+uid);
