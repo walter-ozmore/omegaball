@@ -56,7 +56,8 @@ class Accounts {
     let accounts = this.accounts;
 
     if( forceUpdate == false && accounts[uid] != null ) {
-      returnFunction(accounts[uid]);
+      if(returnFunction != null)
+        returnFunction(accounts[uid]);
     }
 
     console.log("Fetching UID: "+uid);
@@ -66,7 +67,8 @@ class Accounts {
       let user = JSON.parse( this.responseText );
       accounts[user["uid"]] = user;
 
-      returnFunction(user);
+      if(returnFunction != null)
+        returnFunction(user);
     }, "uid="+uid);
     return;
   }
