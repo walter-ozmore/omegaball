@@ -24,6 +24,7 @@
         grid-auto-flow: column;
         justify-content: space-evenly;
         display: grid;
+        max-height: 40em;
       }
 
       .vote-image {
@@ -120,8 +121,10 @@
         EDICTS
         </button>
       </p>
-      <p>  
+      <p>
+        <button>  
         REWARDS
+        </button>
       </p>
       </div>
 
