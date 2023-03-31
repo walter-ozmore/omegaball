@@ -44,6 +44,7 @@
   <a href="/omegaball/rules">RULES</a>
   <a href="/omegaball/account">ACCOUNT</a>
   <a href="/omegaball/console">CONSOLE</a>
+  <a href="/omegaball/suggestions">SUGGESTIONS</a>
 </div>
 
 <div style="position: absolute; right: 1em; top: 0em;text-align: right">
