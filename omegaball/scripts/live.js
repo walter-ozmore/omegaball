@@ -70,6 +70,7 @@ function run() {
     },
     "q="+JSON.stringify(args)
   );
+  console.log(JSON.stringify(args));
 }
 
 function processTimeSlice(timeSlice, end = false) {

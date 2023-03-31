@@ -231,7 +231,7 @@
         $data["teams"][$teamIndex]["players"][$playerIndex]["heldBalls"] = 0;
         $data["teams"][$teamIndex]["players"][$playerIndex]["inGame"] = true;
 
-        if($data["rules"]["useOutPoints"] == true) {
+        if($data["rules"]["useOutPoints"] == 1) {
           $data["teams"][$teamIndex]["players"][$playerIndex]["outPoints"] = $data["rules"]["defaultOutPointsAmount"];
         }
       }
