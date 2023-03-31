@@ -125,10 +125,15 @@ function showTeamSelectionNotification() {
   confirmButton.innerHTML = "Confirm Selection";
   confirmButton.onclick = function() {
     closeNotification( this );
-    ajax("/omegaball/ajax/update-user-team.php", function() {
-      if (this.readyState != 4 || this.status != 200) return;
-      console.log(this.responseText);
-    }, `uid=${8}&team=${selectedTeam}`);
+    Accounts.loadCurrentUser(function(user) {
+      uid = user["uid"]
+      ajax("/omegaball/ajax/update-user-team.php", function() {
+        if (this.readyState != 4 || this.status != 200) return;
+        // console.log(this.responseText);
+      }, `uid=${uid}&team=${selectedTeam}`);
+    });
+
+
   };
   notEle.appendChild(confirmButton);
 
