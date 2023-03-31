@@ -94,7 +94,10 @@ function closeNotification(element) {
   }
 }
 
-
+/**
+ * Creates a pop up promping the user to select a team, the selection will then
+ * be updated in SQL using ajax
+ */
 function showTeamSelectionNotification() {
   // If data is not found, fetch data
   if(data == undefined) {
