@@ -22,8 +22,7 @@ function createNotification() {
  * the relevant notifications
  */
 function checkNotify() {
-  var xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function() {
+  ajax("/omegaball/ajax/notify.php", function() {
     if (this.readyState != 4 || this.status != 200) return;
     let obj;
     try {
@@ -33,11 +32,24 @@ function checkNotify() {
       return;
     }
 
-    // Disabled because annoying
-    // notifyChampionshipWin( obj.acronym, obj.teamName, "OKAY" );
-  };
-  xhttp.open("GET", "/omegaball/ajax/notify.php", true);
-  xhttp.send();
+    let notifications = obj;
+
+    for(notification of notifications) {
+      let code = notification["code"];
+
+      switch(code) {
+        case 1:
+          showTeamSelectionNotification();
+          break;
+        case 2:
+          let acronym = notification["acronym"];
+          let name = notification["teamName"];
+          let buttonText = notification["buttonText"];
+          notifyChampionshipWin(acronym, name, buttonText);
+          break;
+      }
+    }
+  });
 }
 
 function notifyChampionshipWin(acronym, name, buttonText) {
@@ -94,7 +106,10 @@ function closeNotification(element) {
   }
 }
 
-
+/**
+ * Creates a pop up promping the user to select a team, the selection will then
+ * be updated in SQL using ajax
+ */
 function showTeamSelectionNotification() {
   // If data is not found, fetch data
   if(data == undefined) {
@@ -125,10 +140,15 @@ function showTeamSelectionNotification() {
   confirmButton.innerHTML = "Confirm Selection";
   confirmButton.onclick = function() {
     closeNotification( this );
-    ajax("/omegaball/ajax/update-user-team.php", function() {
-      if (this.readyState != 4 || this.status != 200) return;
-      console.log(this.responseText);
-    }, `uid=${8}&team=${selectedTeam}`);
+    Accounts.loadCurrentUser(function(user) {
+      uid = user["uid"]
+      ajax("/omegaball/ajax/update-user-team.php", function() {
+        if (this.readyState != 4 || this.status != 200) return;
+        // console.log(this.responseText);
+      }, `uid=${uid}&team=${selectedTeam}`);
+    });
+
+
   };
   notEle.appendChild(confirmButton);
 
