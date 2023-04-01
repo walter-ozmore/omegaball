@@ -14,7 +14,8 @@
       .border {
         width: auto;
         max-width: 20em;
-        margin: .5em;
+        margin-top: .5em;
+        margin-bottom: .5em;
         padding: .5em;
       }
 
@@ -54,7 +55,7 @@
   </header>
 
   <body>
-    <div id="login" class="border">
+    <div id="login" class="border centered">
       <p class="error" name="error"></p>
 
       <label>Username:</label>
@@ -66,7 +67,7 @@
       <button onclick="loginButton()">login</button>
     </div>
 
-    <div id="sign-up" class="border">
+    <div id="sign-up" class="border centered">
       <p class="error" name="error"></p>
 
       <label>Email:</label>
