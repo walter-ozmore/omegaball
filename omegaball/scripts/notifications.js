@@ -22,8 +22,9 @@ function createNotification() {
  * the relevant notifications
  */
 function checkNotify() {
-  var xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function() {
+  console.log("Checking notifications");
+
+  ajax("/omegaball/ajax/notify.php", function() {
     if (this.readyState != 4 || this.status != 200) return;
     let obj;
     try {
@@ -33,11 +34,30 @@ function checkNotify() {
       return;
     }
 
+    let notifications = obj;
+
+    for(notification of notifications) {
+      let code = notification["code"];
+
+      switch(code) {
+        case 1:
+          showTeamSelectionNotification();
+          break;
+        case 2:
+          let acronym = notification["acronym"];
+          let name = notification["teamName"];
+          let buttonText = notification["buttonText"];
+          notifyChampionshipWin(acronym, name, buttonText);
+          break;
+      }
+    }
+
+    console.log("Notification Object: ");
+    console.log(obj);
+
     // Disabled because annoying
     // notifyChampionshipWin( obj.acronym, obj.teamName, "OKAY" );
-  };
-  xhttp.open("GET", "/omegaball/ajax/notify.php", true);
-  xhttp.send();
+  });
 }
 
 function notifyChampionshipWin(acronym, name, buttonText) {
