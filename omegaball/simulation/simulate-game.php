@@ -151,7 +151,7 @@
     $outputObj = [];
     // Game is an array
     $outputObj["game"] = [];
-    $outputObj["teams"] = $data["teams"];
+    $outputObj["teams"] = reduceForDisplay($data)["teams"];
 
     // Loop for a maximum of 30 turns, just incase of a infinite loop
     for($turnCounter = 0; $turnCounter < $maxTurns && $gameRunning; $turnCounter++) {
@@ -205,14 +205,6 @@
       throwBall($playerObj);
       return;
     }
-  }
-
-
-  /**
-   * Remove excess data to reduce package size
-   */
-  function reduceForDisplay($data) {
-    return $data;
   }
 
 

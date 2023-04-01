@@ -135,8 +135,8 @@ function displayTeam(teamData, textAlign="center") {
   team.appendChild( teamName );
 
   // for(let x=0;x<teamData.players.length;x++) {
-  for(let key in teamData.players) {
-    let playerData = teamData.players[key];
+  for(let playerName in teamData.players) {
+    let playerData = teamData.players[playerName];
 
     let player = document.createElement("p");
     if( playerData.inGame == false ) {
@@ -154,7 +154,7 @@ function displayTeam(teamData, textAlign="center") {
     }
 
     // player.classList.add("indent");
-    player.innerHTML += (textAlign=="right")? extra + playerData.playerName: playerData.playerName + extra;
+    player.innerHTML += (textAlign=="right")? extra + playerName: playerName + extra;
     team.appendChild( player );
   }
 
