@@ -312,6 +312,26 @@ function syncFetchData() {
   data = JSON.parse( text );
 }
 
+function colorTeamName(args={}) {
+  defaultArgs = {
+    "team": null, // Required
+    "message": null,
+    "type": 0// 0:Full Team Name  1:Acronym
+  };
+  args = mergeArgs(defaultArgs, args);
+
+  if(team == null) return "NULL";
+
+  // Grab color
+  let color = "rgb(255, 102, 255)"
+
+
+}
+
+function getTeamColor(teamAcronym) {
+
+}
+
 
 /**
  * Runs the given function when the window loads, if the
