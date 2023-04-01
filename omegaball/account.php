@@ -41,6 +41,7 @@
         account_signup(function(data) {
           if(data["code"] == 0) {
             Accounts.loadCurrentUser();
+            checkNotify();
             return;
           }
         }, "omegaball");

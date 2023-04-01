@@ -1,6 +1,7 @@
 <?php
   require_once realpath($_SERVER["DOCUMENT_ROOT"])."/res/secure/database.php";
   require_once realpath($_SERVER["DOCUMENT_ROOT"])."/res/lib.php";
+  require_once realpath($_SERVER["DOCUMENT_ROOT"])."/account/version-3/lib.php";
 
   function seasonTeamWin($teamAcronym) {
     global $returnObj, $conn;
@@ -16,11 +17,16 @@
     ];
   }
 
+  $returnObj = [];
 
   // Load current user
-  $uid = 8;
+  $user = getCurrentUser();
+  if($user == null) {
+    echo json_encode( $returnObj );
+    exit();
+  }
+  $uid = $user["uid"];
 
-  $returnObj = [];
   $conn = connectDB("newOmegaball");
   $query = "SELECT team FROM User WHERE uid=$uid LIMIT 1;";
   $teamAcronym = runQuery($conn, $query)->fetch_assoc()["team"];

@@ -22,8 +22,6 @@ function createNotification() {
  * the relevant notifications
  */
 function checkNotify() {
-  console.log("Checking notifications");
-
   ajax("/omegaball/ajax/notify.php", function() {
     if (this.readyState != 4 || this.status != 200) return;
     let obj;
@@ -51,12 +49,6 @@ function checkNotify() {
           break;
       }
     }
-
-    console.log("Notification Object: ");
-    console.log(obj);
-
-    // Disabled because annoying
-    // notifyChampionshipWin( obj.acronym, obj.teamName, "OKAY" );
   });
 }
 
