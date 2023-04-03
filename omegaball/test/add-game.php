@@ -4,6 +4,13 @@
     <title>Test</title>
     <?php require_once realpath($_SERVER["DOCUMENT_ROOT"])."/omegaball/res/head.php"; ?>
 
+    <style>
+      .border {
+        width: 30em;
+        padding: .5em;
+      }
+    </style>
+
     <script>
       var allStats = [];
 
@@ -95,11 +102,15 @@
     <?php require realpath($_SERVER["DOCUMENT_ROOT"])."/omegaball/res/header.php"; ?>
   </header>
   <body>
-    <div class="border" style="width: 30em; padding: .5em;">
+    <div class="border">
+
+    </div>
+
+    <div class="border">
       <h2 style="width: auto; padding: 0em; margin: 0em;">Average Game Stats</h2>
       <p id="numberOfGames"></p>
       <p id="avg-stats"></p>
-      <button onclick="runGame(true)">Run Indefinitely</button>
+      <button onclick="runGame()">Run</button>
       <button onclick="runGames(100)">Run 100 Game</button>
       <button onclick="clearStats()">Clear</button>
     </div>
