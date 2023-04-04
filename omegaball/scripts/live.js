@@ -1,6 +1,4 @@
 function run() {
-  console.log(selectedTeams);
-
   let args = {};
   args["teams"] = selectedTeams;
   args["rules"] = {};
@@ -21,56 +19,36 @@ function run() {
     }
   }
 
-  console.log(args);
-
-  // Hide controls so they can't spam it
+  // Hide controls so users can't spam it
   document.getElementById("controller").style.display = "none";
 
-  ajax(
-    "/omegaball/ajax/run-simulation.php",
-    function() {
-      if (this.readyState != 4 || this.status != 200) return;
-      let obj = null;
-      try {
-        obj = JSON.parse(this.responseText);
-        console.log(obj);
-      } catch {
-        console.error(this.responseText);
-        return;
-      }
+  ajaxJson("/omegaball/ajax/run-simulation.php", function(obj) {
+    decode(obj);
+  }, "q="+JSON.stringify(args) );
+}
 
-      let output = document.getElementById("output");
+function decode(obj) {
+  let gameWindow = document.getElementById("game-window");
+  let outputEle = gameWindow.querySelector("[name='output']");
 
-      // Clear info
-      output.innerHTML = "";
+  // Clear info
+  outputEle.innerHTML = "";
 
-      // Display teams
-      displayTeams(obj.teams);
+  // Display teams
+  displayTeams(obj.teams);
 
-      // Display stats
-      let statsDiv = document.getElementById("stats");
-      let SECONDS = obj.game.length * 8;
-      statsDiv.innerHTML = `
-      Number of Messages `+obj.game.length +`<br>
-      Time to complete game: `+new Date(SECONDS * 1000).toISOString().slice(11, 19);
-
-
-      let delayTime = document.getElementById("speed").value;
-      for(let x=0;x<obj.game.length;x++) {
-        if(delayTime > 10)
-          setTimeout(
-            function () {
-              processTimeSlice( obj.game[x], (x == obj.game.length - 1) )
-            },
-            delayTime * x
-          );
-        else
+  let delayTime = document.getElementById("speed").value;
+  for(let x=0;x<obj.game.length;x++) {
+    if(delayTime > 10)
+      setTimeout(
+        function () {
           processTimeSlice( obj.game[x], (x == obj.game.length - 1) )
-      }
-    },
-    "q="+JSON.stringify(args)
-  );
-  console.log(JSON.stringify(args));
+        },
+        delayTime * x
+      );
+    else
+      processTimeSlice( obj.game[x], (x == obj.game.length - 1) )
+  }
 }
 
 function processTimeSlice(timeSlice, end = false) {

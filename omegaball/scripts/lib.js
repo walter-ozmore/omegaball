@@ -109,6 +109,24 @@ function ajax(url, fun, args="") {
   xhttp.send(args);
 }
 
+function ajaxJson(url, fun, args="") {
+  let xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState != 4 || this.status != 200) return;
+    try {
+      let obj = JSON.parse(this.responseText);
+      fun(obj);
+    } catch {
+      console.error(this.responseText);
+      return null;
+    }
+  };
+
+  xhttp.open("POST", url, true);
+  xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhttp.send(args);
+}
+
 
 function syncAjax(url, args="") {
   try {
