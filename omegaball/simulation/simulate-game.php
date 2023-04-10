@@ -140,7 +140,12 @@
 
     // Setup game rules
     // echo var_dump($args);
-    $data["rules"] = $args["rules"];
+    $defaultRules = [
+      "useOutPoints"=>0,
+      "displayPickupMessages"=>0,
+      "defaultOutPointsAmount"=>0
+    ];
+    $data["rules"] = (isset($args["rules"]))? $args["rules"] : $defaultRules;
 
     // Setup local varables
     addLocalVarables();
@@ -166,6 +171,8 @@
     }
 
     return $outputObj;
+    // $args = ["Hello"=>"World"];
+    // return json_encode($args);
   }
 
 

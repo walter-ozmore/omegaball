@@ -71,7 +71,7 @@
       .dropdown:hover {background-color: rgba(255, 255, 255, .1);}
     </style>
 
-    <script src="/omegaball/scripts/live.js"></script>
+    <script src="/omegaball/simulation/game-manager.js"></script>
     <script>
       var allStats = [];
 
@@ -113,9 +113,27 @@
       }
 
       function runGame() {
-        let args = '{"teams":["HEAV","STYX"],"rules":{"displayPickupMessages":1,"useOutPoints":1,"defaultOutPointsAmount":"2","speed":"80"}}';
+        // let args = '{"teams":["HEAV","STYX"],"rules":{"displayPickupMessages":1,"useOutPoints":1,"defaultOutPointsAmount":"2","speed":"80"}}';
 
-        ajaxJson("/omegaball/ajax/run-simulation.php", function(obj) {
+        // ajaxJson("/omegaball/ajax/run-simulation.php", function(obj) {
+        //   // Display stats
+        //   let stats = {
+        //     "Number of Messages": obj.game.length,
+        //     "Run Time": obj.game.length * 8,
+        //     "Total Length": txt.length,
+        //     "Average Length per Message": Math.floor( txt.length / obj.game.length )
+        //   };
+        //   drawStats( stats, document.getElementById("stats") );
+        //   allStats.push(stats);
+        //   average();
+
+        //   decode(obj);
+        // }, "q="+args );
+
+        gameManager.addWindow( document.getElementById("output") );
+        gameManager.runGame({}, function(obj) {
+          let txt = JSON.stringify(obj);
+
           // Display stats
           let stats = {
             "Number of Messages": obj.game.length,
@@ -126,9 +144,7 @@
           drawStats( stats, document.getElementById("stats") );
           allStats.push(stats);
           average();
-
-          decode(obj);
-        }, "q="+args );
+        });
       }
 
       function runGames(number) {

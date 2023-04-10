@@ -112,8 +112,9 @@ function displayTeam(teamData, textAlign="center") {
   }
   team.appendChild( teamName );
 
-  // for(let x=0;x<teamData.players.length;x++) {
+
   for(let playerName in teamData.players) {
+    // Player name is needed elseware
     let playerData = teamData.players[playerName];
 
     let player = document.createElement("p");
@@ -123,6 +124,7 @@ function displayTeam(teamData, textAlign="center") {
       player.style.textDecoration = 'line-through';
     }
 
+    // Extra is the balls held and out points that a player has
     let extra = "";
     for(let x=0;x<playerData.heldBalls;x++) {
       extra += "*";
@@ -141,31 +143,31 @@ function displayTeam(teamData, textAlign="center") {
 var selectedTeams = [];
 var optionElements = [];
 
-document.addEventListener("DOMContentLoaded", function() {
-  ajax("/omegaball/ajax/get-data.php", function() {
-    if (this.readyState != 4 || this.status != 200) return;
-    data = JSON.parse(this.responseText);
+// document.addEventListener("DOMContentLoaded", function() {
+//   ajax("/omegaball/ajax/get-data.php", function() {
+//     if (this.readyState != 4 || this.status != 200) return;
+//     data = JSON.parse(this.responseText);
 
-    let divisionElement = getDivisionElement({
-      "onClickTeam":function(args) {
-        if(args["selected"]) {
-          selectedTeams.push( args["teamIndex"] );
-        } else {
-          // Delete from array
-          selectedTeams.splice( selectedTeams.indexOf(args["teamIndex"]), 1 );
-        }
-      },
-      "multiSelect": true
-    });
+//     let divisionElement = getDivisionElement({
+//       "onClickTeam":function(args) {
+//         if(args["selected"]) {
+//           selectedTeams.push( args["teamIndex"] );
+//         } else {
+//           // Delete from array
+//           selectedTeams.splice( selectedTeams.indexOf(args["teamIndex"]), 1 );
+//         }
+//       },
+//       "multiSelect": true
+//     });
 
-    // divisionElement.style.width = "100%";
-    divisionElement.classList.add("centered");
+//     // divisionElement.style.width = "100%";
+//     divisionElement.classList.add("centered");
 
-    document.getElementById("teamSelector").appendChild(divisionElement);
+//     document.getElementById("teamSelector").appendChild(divisionElement);
 
-    createOption("displayPickupMessages", "Display Ball Pickup Messages");
-    createOption("useOutPoints", "Use out points");
-    createOption("defaultOutPointsAmount", "Default out points amount", {"2":"2", "3":"3"});
-    createOption("speed", "Display speed", {"80":"Fastest", "800":"Faster", "8000":"Normal"});
-  });
-});
+//     createOption("displayPickupMessages", "Display Ball Pickup Messages");
+//     createOption("useOutPoints", "Use out points");
+//     createOption("defaultOutPointsAmount", "Default out points amount", {"2":"2", "3":"3"});
+//     createOption("speed", "Display speed", {"80":"Fastest", "800":"Faster", "8000":"Normal"});
+//   });
+// });

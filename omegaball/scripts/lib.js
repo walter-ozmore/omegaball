@@ -109,22 +109,23 @@ function ajax(url, fun, args="") {
   xhttp.send(args);
 }
 
-function ajaxJson(url, fun, args="") {
+function ajaxJson(url, fun, args={}) {
   let xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
     if (this.readyState != 4 || this.status != 200) return;
+    let obj = {};
     try {
-      let obj = JSON.parse(this.responseText);
-      fun(obj);
+      obj = JSON.parse(this.responseText);
     } catch {
       console.error(this.responseText);
       return null;
     }
+    fun(obj);
   };
 
   xhttp.open("POST", url, true);
   xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhttp.send(args);
+  xhttp.send("q="+JSON.stringify(args));
 }
 
 
@@ -152,7 +153,7 @@ function syncAjax(url, args="") {
  * @param {string} innerHTML
  * @returns The created element
  */
-function mkEle(type, innerHTML) {
+function mkEle(type, innerHTML="") {
   let ele = document.createElement(type);
   ele.innerHTML = innerHTML;
   return ele;
