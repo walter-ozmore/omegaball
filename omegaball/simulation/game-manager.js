@@ -9,6 +9,21 @@ class GameManager {
     element.appendChild(this.textDiv);
   }
 
+  debug_countBalls(timeSlice) {
+    let heldBallCount = 0;
+
+    if(Object.hasOwn(timeSlice, "teams")){
+      for(let teamAcronym in timeSlice.teams) {
+        for(let playerName in timeSlice.teams[teamAcronym].players) {
+          let player = timeSlice.teams[teamAcronym].players[playerName];
+          heldBallCount += player.heldBalls;
+        }
+      }
+    }
+
+    return heldBallCount + "/" + (timeSlice.data!==undefined)? timeSlice.data.ballsOnGround: "UKN";
+  }
+
   runGame(args = {}, returnFunction = null, display = true) {
     args = {
       teams: ["STYX", "HEAV"]
@@ -21,14 +36,13 @@ class GameManager {
       // Clear info
       gameManager.textDiv.innerHTML = "";
 
-      console.log( obj.game[0] );
-
-      // let delayTime = document.getElementById("speed").value;
       for(let x=0;x<obj.game.length;x++) {
         let timeSlice = obj.game[x];
 
         gameManager.processTimeSlice(timeSlice, gameManager);
       }
+
+      console.log("job done");
     }, args );
   }
 
@@ -121,7 +135,9 @@ class GameManager {
         // By here we know that a player does exists. Either we made it or it
         // already exists
         let player = team["players"][playerName];
-        player.div.innerHTML = player.playerName;
+        let ballCounter = "hii";
+        for(let x=0;x<freshPlayer["heldBalls"];x++) ballCounter += "*";
+        player.div.innerHTML = player.playerName + ballCounter;
       }
     }
 

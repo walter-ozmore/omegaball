@@ -56,6 +56,7 @@
       global $data;
       $reducedData = reduceForDisplay( $data );
       $timeSlice["teams"] = $reducedData["teams"];
+      $timeSlice["data"] = ["ballsOnGround"=>$data["ballsOnGround"]];
     }
 
     // If appending, then just update the last message
