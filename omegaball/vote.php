@@ -116,13 +116,13 @@
   <div class="grid-container">
       <!-- Directory -->
       <div id="directory" class="border">
-      <p> 
-        <button class = "selected"> 
+      <p>
+        <button class = "selected">
         EDICTS
         </button>
       </p>
       <p>
-        <button>  
+        <button>
         REWARDS
         </button>
       </p>
@@ -137,17 +137,17 @@
           </p>
         <div class="grid-holder">
           <div> <p>SINKING SHIP</p> </div>
-          <div><img class="vote-image" src="https://harpersbazaar.com.au/wp-content/uploads/2022/11/jack-titanic.jpg" alt="Sinking Ship"></div> 
+          <div><img class="vote-image" src="/omegaball/res/graphics/test/1x1.png" alt="Sinking Ship"></div>
           <div><p>The team with the fewest wins at the end of each season will be eliminated and replaced.</p></div>
           <div><button onclick = "submit()">VOTE</button></div>
 
           <div> <p>FORBIDDEN KNOWLEDGE</p> </div>
-          <div><img class="vote-image" src="https://external-preview.redd.it/NQKtqcpXKQYcIRmOg3CJkUHkMvTnppv1hyw6sgDfldQ.jpg?auto=webp&s=724507cbe8c31b90731978f55d275968aad47048" alt="Sinking Ship"></div>
+          <div><img class="vote-image" src="/omegaball/res/graphics/test/1x1.png" alt="Sinking Ship"></div>
           <div><p>Forbidden.</p></div>
           <div><button onclick = "submit()">VOTE</button></div>
-          
+
           <div><p>SCOREBOARD</p></div>
-          <div><img class="vote-image" src="https://ih1.redbubble.net/image.179407712.0276/st,small,507x507-pad,600x600,f8f8f8.u4.jpg" alt="Sinking Ship"></div>
+          <div><img class="vote-image" src="/omegaball/res/graphics/test/1x1.png" alt="Sinking Ship"></div>
           <div><p>Games will be decided based on a point-scoring system.</p></div>
           <div><button onclick = "submit()">VOTE</button></div>
         </div>
