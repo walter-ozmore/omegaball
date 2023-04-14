@@ -106,13 +106,11 @@
 
       // Get votes
 
-      let args = {
-        0: 0,
-        1: 12
-      }
+      let args = {season: 0};
+
       ajaxJson("/omegaball/ajax/get-votes.php", function(obj){
         console.log(obj);
-      }, JSON.stringify(args))
+      }, args);
     </script>
   </head>
 

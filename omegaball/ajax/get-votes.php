@@ -5,11 +5,12 @@
   $returnObj = [];
 
   $conn = connectDB("newOmegaball");
+  $array = json_decode($_POST["q"], true);
 
-  $a = json_decode($_POST["q"]);
+  $season = $array["season"];
 
   $query = "SELECT id, title, voteType, image, votes, description FROM Vote
-    WHERE startTime = '$a[0]' AND endTime = '$a[1]';";
+    WHERE season = '$season';";
 
   $result = runQuery($conn, $query);
   while ($row = $result->fetch_assoc()) {
