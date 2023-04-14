@@ -8,7 +8,7 @@
 
   $a = json_decode($_POST["q"]);
 
-  $query = "SELECT title, voteType, image, votes, description FROM Vote
+  $query = "SELECT id, title, voteType, image, votes, description FROM Vote
     WHERE startTime = '$a[0]' AND endTime = '$a[1]';";
 
   $result = runQuery($conn, $query);
