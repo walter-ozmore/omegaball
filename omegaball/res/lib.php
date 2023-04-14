@@ -120,7 +120,8 @@
     $playerName = $playerObj["playerName"];
     $teamColor = $teamObj["teamColor"];
     $extra = ( !array_key_exists("inGame", $playerObj) || $playerObj["inGame"] || $extra)? "" : "text-decoration: line-through white;";
-    $displayName = "<span style='color: $teamColor;$extra'>$playerName</span>";
+    $e = $playerObj["heldBalls"];
+    $displayName = "<span style='color: $teamColor;$extra'>$playerName - $e</span>";
 
     return $displayName;
   }

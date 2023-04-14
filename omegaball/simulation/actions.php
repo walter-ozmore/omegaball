@@ -14,29 +14,15 @@
 
     save($player);
 
-    // Create time slice data
+    // Write message to screen
     message("player.out", ["player"=>getPlayerDisplayName($player)], true, true);
   }
 
-  function playerOPHit($player) {
-    $player["outPoints"] = $player["outPoints"] - 1;
-    if($player["outPoints"] <= 0)
-      setPlayerOut($player);
-    else
-      save($player);
-  }
-
+  /**
+   * Call when a player is hit
+   */
   function playerHit($player) {
-    global $data;
-
-    if($data["rules"]["useOutPoints"]) {
-      playerOPHit($player);
-      return;
-    }
-
     setPlayerOut($player);
-    $player["outPoints"] = $data["rules"]["defaultOutPointsAmount"];
-    save($player);
   }
 
 
@@ -72,6 +58,13 @@
    * @param player The player that is throwing the ball
    */
   function throwBall($attacker) {
+    global $data;
+
+    if($attacker["heldBalls"] <= 0) {
+      error("ERROR: No balls to throw and tried to throw a ball");
+      return;
+    }
+
     // Pick a target
     $targetPlayer = pickTarget($attacker);
     if($targetPlayer == null) {
@@ -81,18 +74,16 @@
 
     // Remove the ball from the attacker
     $attacker["heldBalls"] = $attacker["heldBalls"] - 1;
+    // Add the ball back to the ground
+    $data["ballsOnGround"]++;
     save($attacker);
 
     // Calculate the roll
     $attackDodge = $attacker["foresight"] * random();
     $attackCatch = $attacker["tendons"] * random();
 
-    // Create message
+    // Create throw message
     message( "player.throw", ["attacker"=>getPlayerDisplayName($attacker), "defender"=>getPlayerDisplayName($targetPlayer)] );
-
-    // Print out message
-
-    // Check for ricochet
 
     // Defending player respond
     ballComing($targetPlayer, $attackDodge, $attackCatch, $attacker);
@@ -119,9 +110,6 @@
        * Attempt to dodge
        */
       case 0:
-        // Add the ball back to the ground
-        $data["ballsOnGround"]++;
-
         if( $attackDodge > $defendDodge) {
           // Defender is hit with the ball
           message( "player.dodge.failure",[
@@ -149,7 +137,6 @@
             "defender"=>getPlayerDisplayName($defender)
           ]);
           playerHit($defender);
-          $data["ballsOnGround"]++;
           break;
         }
         message( "player.catch.success",[
@@ -159,7 +146,8 @@
         playerHit($attacker);
         returnPlayer($defender);
 
-        $defender["heldBalls"]++;
+        $defender["heldBalls"] = $defender["heldBalls"] + 1;
+        $data["ballsOnGround"] = $data["ballsOnGround"] - 1;
         save($defender);
         break;
     }
@@ -176,8 +164,7 @@
     $data["ballsOnGround"] = $data["ballsOnGround"] - 1;
     save( $player );
 
-    if( $data["rules"]["displayPickupMessages"] )
-      message( "player.pickUpBall", ["player"=>getPlayerDisplayName($player, false)] );
+    message( "player.pickUpBall", ["player"=>getPlayerDisplayName($player, false)] );
   }
 
 
@@ -217,17 +204,11 @@
     $index = rand(0, sizeof($options)-1);
     $target = $options[$index];
 
-    // Reduce chance of being targeted
-    $rand = random();
-    if( sizeof($options) > 1 && $rand < $target["incorporeality"] ) {
-      // message("player.changeTarget.incorporeality", [
-      //   "attacker"=>getPlayerDisplayName($attacker),
-      //   "defender"=>getPlayerDisplayName($target),
-      //   "chance"=>$target["incorporeality"],
-      //   "value"=>$rand
-      // ], false);
-      return pickTarget($attacker);
-    }
+    // // Reduce chance of being targeted
+    // $rand = random();
+    // if( sizeof($options) > 1 && $rand < $target["incorporeality"] ) {
+    //   return pickTarget($attacker);
+    // }
     return $target;
   }
 ?>

@@ -54,7 +54,9 @@
 
     if($updateTeams) {
       global $data;
-      $timeSlice["teams"] = $data["teams"];
+      $reducedData = reduceForDisplay( $data );
+      $timeSlice["teams"] = $reducedData["teams"];
+      $timeSlice["data"] = ["ballsOnGround"=>$data["ballsOnGround"]];
     }
 
     // If appending, then just update the last message
@@ -65,5 +67,32 @@
 
     // Add timeslice to end of game
     $outputObj["game"][] = $timeSlice;
+  }
+
+
+  /**
+   * Remove excess data to reduce package size
+   */
+  function reduceForDisplay($data) {
+    // unset( $data["teams"] );
+    foreach( $data["teams"] as $teamAcronym => $team ) {
+      foreach( $data["teams"][$teamAcronym]["players"] as $playerName => $player ) {
+        $includeList = ["inGame", "heldBalls"];
+        $newPlayer = [];
+        foreach( $includeList as $index )
+          $newPlayer[$index] = $player[$index];
+
+        $data["teams"][$teamAcronym]["players"][$playerName] = $newPlayer;
+      }
+
+      $includeList = ["players", "teamColor", "teamName"];
+      $newTeam = [];
+      foreach( $includeList as $index )
+        if( isset($team[$index]) )
+          $newTeam[$index] = $data["teams"][$teamAcronym][$index];
+
+      $data["teams"][$teamAcronym] = $newTeam;
+    }
+    return $data;
   }
 ?>
