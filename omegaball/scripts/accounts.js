@@ -73,6 +73,39 @@ class Accounts {
     }, "uid="+uid);
     return;
   }
+
+  static loadAccountReturn() {}
+
+  static currentUserReturn() {
+    if (this.readyState != 4 || this.status != 200) return;
+    if(this.responseText.length <= 0) return;
+    let currentUser = JSON.parse(this.responseText);
+
+    Accounts.accounts[currentUser["uid"]] = currentUser;
+
+    let elements;
+
+    elements = document.getElementsByName("cu-username");
+    for (let i = 0; i < elements.length; i++) {
+      let ele = elements[i];
+      ele.innerHTML = currentUser.username;
+      ele.style.display = "block";
+    }
+
+    elements = document.getElementsByName("cu-currency");
+    for (let i = 0; i < elements.length; i++) {
+      let ele = elements[i];
+      ele.innerHTML = currentUser.currency;
+      ele.style.display = "block";
+    }
+
+    elements = document.getElementsByName("cu-team");
+    for (let i = 0; i < elements.length; i++) {
+      let ele = elements[i];
+      ele.innerHTML = currentUser.team;
+      ele.style.display = "block";
+    }
+  }
 }
 
 Accounts.init();
