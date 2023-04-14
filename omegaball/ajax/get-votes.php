@@ -6,12 +6,12 @@
 
   $conn = connectDB("newOmegaball");
 
-  $startTime = $_POST["startTime"];
-  $endTime = $_POST["endTime"];
+  $a = json_decode($_POST["q"]);
 
   $query = "SELECT title, voteType, image, votes, description FROM Vote
-    WHERE startTime = '$startTime' AND endTime = '$endTime';";
+    WHERE startTime = '$a[0]' AND endTime = '$a[1]';";
 
+  $result = runQuery($conn, $query);
   while ($row = $result->fetch_assoc()) {
     $returnObj[] = $row;
   }

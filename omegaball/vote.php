@@ -103,6 +103,16 @@
         cont.style.display = "inline";
         temp.appendChild(cont);
       }
+
+      // Get votes
+
+      let args = {
+        0: 0,
+        1: 12
+      }
+      ajaxJson("/omegaball/ajax/get-votes.php", function(obj){
+        console.log(obj);
+      }, JSON.stringify(args))
     </script>
   </head>
 
