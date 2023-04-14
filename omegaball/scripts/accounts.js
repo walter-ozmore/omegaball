@@ -60,7 +60,8 @@ class Accounts {
         returnFunction(accounts[uid]);
     }
 
-    console.log("Fetching UID: "+uid);
+    if(uid == -1) return;
+
     ajax("/omegaball/ajax/fetch-user.php", function() {
       if (this.readyState != 4 || this.status != 200) return;
       if(this.responseText.length <= 0) return;
