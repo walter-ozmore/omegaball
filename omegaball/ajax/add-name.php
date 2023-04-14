@@ -60,7 +60,7 @@
 
   $query = "INSERT INTO PlayerName (playerName, position) VALUES (\"$name\", $pos)";
   
-//   $result = runQuery($conn, $query);
+  $result = runQuery($conn, $query);
   echo "0";
   
 //   while ($row == $result->fetch_assoc()){
