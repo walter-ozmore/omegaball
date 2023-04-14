@@ -133,28 +133,28 @@
         <center>
           EDICTS
           <p style = "color: gray">
-          Influence the Rules of Play.
+            Influence the Rules of Play.
           </p>
-        <div class="grid-holder">
-          <div> <p>SINKING SHIP</p> </div>
-          <div><img class="vote-image" src="/omegaball/res/graphics/test/1x1.png" alt="Sinking Ship"></div>
-          <div><p>The team with the fewest wins at the end of each season will be eliminated and replaced.</p></div>
-          <div><button onclick = "submit()">VOTE</button></div>
+          <div class="grid-holder">
+            <div> <p>SINKING SHIP</p> </div>
+            <div><img class="vote-image" src="/omegaball/res/graphics/test/1x1.png" alt="Sinking Ship"></div>
+            <div><p>The team with the fewest wins at the end of each season will be eliminated and replaced.</p></div>
+            <div><button onclick = "submit()">VOTE</button></div>
 
-          <div> <p>FORBIDDEN KNOWLEDGE</p> </div>
-          <div><img class="vote-image" src="/omegaball/res/graphics/test/1x1.png" alt="Sinking Ship"></div>
-          <div><p>Forbidden.</p></div>
-          <div><button onclick = "submit()">VOTE</button></div>
+            <div> <p>FORBIDDEN KNOWLEDGE</p> </div>
+            <div><img class="vote-image" src="/omegaball/res/graphics/test/1x1.png" alt="Sinking Ship"></div>
+            <div><p>Forbidden.</p></div>
+            <div><button onclick = "submit()">VOTE</button></div>
 
-          <div><p>SCOREBOARD</p></div>
-          <div><img class="vote-image" src="/omegaball/res/graphics/test/1x1.png" alt="Sinking Ship"></div>
-          <div><p>Games will be decided based on a point-scoring system.</p></div>
-          <div><button onclick = "submit()">VOTE</button></div>
-        </div>
-        <button onclick = "purchase()">
+            <div><p>SCOREBOARD</p></div>
+            <div><img class="vote-image" src="/omegaball/res/graphics/test/1x1.png" alt="Sinking Ship"></div>
+            <div><p>Games will be decided based on a point-scoring system.</p></div>
+            <div><button onclick = "submit()">VOTE</button></div>
+          </div>
+          <button onclick = "purchase()">
             PURCHASE VOTES
-        </button>
-          </center>
+          </button>
+        </center>
       </div>
     </div>
   </body>
