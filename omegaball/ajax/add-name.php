@@ -1,8 +1,22 @@
 <?php
   require_once realpath($_SERVER["DOCUMENT_ROOT"])."/res/secure/database.php";
+  require_once realpath($_SERVER["DOCUMENT_ROOT"])."/ajax/version-3/lib.php";
   require_once realpath($_SERVER["DOCUMENT_ROOT"])."/res/lib.php";
 
+  /* 0 = all good
+  ** 1 = non-numeric pos
+  ** 2 = rows <= 0
+  ** 3 = profanity
+  ** 4 = unknown user
+  */
+
   $conn = connectDB("newOmegaball");
+
+  // Checks if the user is logged in. If not, exit.
+  if(getCurrentUser() == NULL){
+    echo "4";
+    exit();
+  }
 
   // Read profanity words from a file and store them in an array.
   $profanity = [];
