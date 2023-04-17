@@ -3,12 +3,15 @@
   require_once realpath($_SERVER["DOCUMENT_ROOT"])."/ajax/version-3/lib.php";
   require_once realpath($_SERVER["DOCUMENT_ROOT"])."/res/lib.php";
 
-  /* 0 = all good
-  ** 1 = non-numeric pos
-  ** 2 = rows <= 0
-  ** 3 = profanity
-  ** 4 = unknown user
-  */
+  /**
+   * Codes
+   *
+   * 0 - All Good
+   * 1 - Invalid position
+   * 2 - Name already in use
+   * 3 - Profanity
+   * 4 - Unknown user
+   */
 
   $conn = connectDB("newOmegaball");
 
@@ -46,7 +49,7 @@
     echo "1";
     exit();
   }
-  
+
   $query = "SELECT playerName FROM PlayerName WHERE playerName = \"$name\"";
   $result = runQuery($conn, $query);
 
@@ -58,12 +61,8 @@
     exit();
   }
 
+  // Add the name to the pool
   $query = "INSERT INTO PlayerName (playerName, position) VALUES (\"$name\", $pos)";
-  
   $result = runQuery($conn, $query);
   echo "0";
-  
-//   while ($row == $result->fetch_assoc()){
-//     $firstName[] = $row["playerName"];
-//   }
 ?>
