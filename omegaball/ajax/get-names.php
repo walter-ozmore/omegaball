@@ -3,6 +3,7 @@
   require_once realpath($_SERVER["DOCUMENT_ROOT"])."/res/lib.php";
 
   $returnObj = [];
+  $a = [];
 
   $conn = connectDB("newOmegaball");
   
@@ -11,9 +12,11 @@
   $result = runQuery($conn, $query);
 
   while($row = $result -> fetch_assoc()){
-    $returnObj["playerName"] = $row["playerName"];
-    $returnObj["inGame"] = $row["inGame"];
-    $returnObj["position"] = $row["position"];
+    $a["playerName"] = $row["playerName"];
+    $a["inGame"] = $row["inGame"];
+    $a["position"] = $row["position"];
+
+    $returnObj[]  = $a;
   }
 
   echo json_encode($returnObj);
