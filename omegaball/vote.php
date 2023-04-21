@@ -137,7 +137,7 @@
         voteNoti.appendChild(subButton);
       }
       // Get votes
-
+      // The args for the get-votes query. Change each season.
       let args = {season: 0};
 
       ajaxJson("/omegaball/ajax/get-votes.php", function(obj){
