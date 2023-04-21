@@ -26,7 +26,9 @@
         }
         </style>
     <script>
-        ajaxJson("/omegaball/ajax/get-names.php", function(obj){console.log(obj);});
+        ajaxJson("/omegaball/ajax/get-names.php", function(obj){
+            console.log(obj);
+        });
         </script>
     </head>
 
