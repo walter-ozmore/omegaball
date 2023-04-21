@@ -6,8 +6,8 @@
   $a = [];
 
   $conn = connectDB("newOmegaball");
-  
-  $query = "SELECT playerName, inGame, position FROM PlayerName ORDER BY inGame ASC, playerName ASC";
+
+  $query = "SELECT playerName, inGame, position FROM PlayerName ORDER BY inGame ASC, playerName DESC";
 
   $result = runQuery($conn, $query);
 
