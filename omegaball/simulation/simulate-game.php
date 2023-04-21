@@ -50,7 +50,6 @@
    */
   function createActionQueue() {
     global $data;
-    $verbos = false;
     $actionQueue = [];
 
     // Add players to the action queue by speed
@@ -58,47 +57,36 @@
 
     // We set a maximum here to prevent infinite loops
     for($x=0;$x<1000;$x++) {
-      if($verbos) echo "Loop Start<br>";
       $highestSpeedPlayerObj = null;
 
       // Loop though teams
       foreach( $data["teams"] as $teamIndex => $teamObj ) {
-        if($verbos) echo "$teamIndex<br>";
 
         // Loop though players
         foreach( $data["teams"][$teamIndex]["players"] as $playerIndex => $playerObj ) {
           if( $playerObj["hustle"] >= $speedLimit ) {
-            if($verbos) echo " skipping due to speed limit<br>";
             continue;
           }
 
-          if($verbos) echo $playerIndex;
           if( $highestSpeedPlayerObj == null ) {
             $highestSpeedPlayerObj = $playerObj;
-            if($verbos) echo " set as default<br>";
             continue;
           }
-
-
 
           if( $playerObj["hustle"] > $highestSpeedPlayerObj["hustle"] ) {
             $highestSpeedPlayerObj = $playerObj;
-            if($verbos) echo " set as fastest<br>";
           }
         }
       }
 
       // If there is no players found that fit then we are done
       if(!isset($highestSpeedPlayerObj) || $highestSpeedPlayerObj == null) {
-        if($verbos) echo "Job Done<br>";
         break;
       }
 
       // Add player to the action queue then set the speed limit
       $actionQueue[] = $highestSpeedPlayerObj["playerName"];
       $speedLimit = $highestSpeedPlayerObj["hustle"];
-
-      if($verbos) echo $highestSpeedPlayerObj["hustle"] . " " . $highestSpeedPlayerObj["playerName"] . "<br>";
     }
 
     return $actionQueue;
@@ -112,15 +100,14 @@
   function runGame($args=[]) {
     global $data, $outputObj, $gameRunning;
     $gameRunning = true;
-    $maxTurns = 200;
+    $maxTurns = 50;
 
     loadMessages();
 
     // echo var_dump($args);
 
     // Load data
-    $loadDataArgs = ["teams"=>$args["teams"]];
-    $data = loadData($loadDataArgs);
+    $data = loadData( ["teams"=>$args["teams"]] );
 
     // Remove extra teams
     foreach( $data["teams"] as $teamIndex => $team ) {
@@ -138,10 +125,6 @@
       unset( $data["teams"][$teamIndex] );
     }
 
-    // Setup game rules
-    // echo var_dump($args);
-    $data["rules"] = $args["rules"];
-
     // Setup local varables
     addLocalVarables();
 
@@ -151,7 +134,7 @@
     $outputObj = [];
     // Game is an array
     $outputObj["game"] = [];
-    $outputObj["teams"] = $data["teams"];
+    $outputObj["teams"] = reduceForDisplay($data)["teams"];
 
     // Loop for a maximum of 30 turns, just incase of a infinite loop
     for($turnCounter = 0; $turnCounter < $maxTurns && $gameRunning; $turnCounter++) {
@@ -166,6 +149,8 @@
     }
 
     return $outputObj;
+    // $args = ["Hello"=>"World"];
+    // return json_encode($args);
   }
 
 
@@ -209,14 +194,6 @@
 
 
   /**
-   * Remove excess data to reduce package size
-   */
-  function reduceForDisplay($data) {
-    return $data;
-  }
-
-
-  /**
    * Adds local varables that are needed to run the simulation on the global
    * data array
    */
@@ -230,12 +207,7 @@
       foreach( $team["players"] as $playerIndex => $player ) {
         $data["teams"][$teamIndex]["players"][$playerIndex]["heldBalls"] = 0;
         $data["teams"][$teamIndex]["players"][$playerIndex]["inGame"] = true;
-
-        if($data["rules"]["useOutPoints"] == true) {
-          $data["teams"][$teamIndex]["players"][$playerIndex]["outPoints"] = $data["rules"]["defaultOutPointsAmount"];
-        }
       }
-
       $data["ballsOnGround"] += sizeof($team["players"]) / 5;
     }
   }

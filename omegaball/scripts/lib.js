@@ -24,10 +24,14 @@ function checkSelected() {
   if(links == undefined) return;
   let url = window.location.href.split('?')[0];
 
+  let location = url.substring( url.indexOf("/omegaball/") + "/omegaball/".length );
+  location = location.substring(0, location.indexOf("/"));
+
   var children = links.children;
   for (var i = 0; i < children.length; i++) {
     var child = children[i];
-    if(url.toUpperCase().endsWith( "/" + child.innerHTML.toUpperCase() )) {
+    console.log( child.innerHTML.toUpperCase()+" "+location.toUpperCase() );
+    if(child.innerHTML.toUpperCase() == location.toUpperCase()) {
       child.classList.add("selected");
     }
   }
@@ -109,6 +113,25 @@ function ajax(url, fun, args="") {
   xhttp.send(args);
 }
 
+function ajaxJson(url, fun, args={}) {
+  let xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState != 4 || this.status != 200) return;
+    let obj = {};
+    try {
+      obj = JSON.parse(this.responseText);
+    } catch {
+      console.error(this.responseText);
+      return null;
+    }
+    fun(obj);
+  };
+
+  xhttp.open("POST", url, true);
+  xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhttp.send("q="+JSON.stringify(args));
+}
+
 
 function syncAjax(url, args="") {
   try {
@@ -134,9 +157,10 @@ function syncAjax(url, args="") {
  * @param {string} innerHTML
  * @returns The created element
  */
-function mkEle(type, innerHTML) {
+function mkEle(type, innerHTML=null) {
   let ele = document.createElement(type);
-  ele.innerHTML = innerHTML;
+  if(innerHTML !== null)
+    ele.innerHTML = innerHTML;
   return ele;
 }
 

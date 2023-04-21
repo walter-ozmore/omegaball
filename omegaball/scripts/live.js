@@ -1,6 +1,4 @@
 function run() {
-  console.log(selectedTeams);
-
   let args = {};
   args["teams"] = selectedTeams;
   args["rules"] = {};
@@ -21,55 +19,36 @@ function run() {
     }
   }
 
-  console.log(args);
-
-  // Hide controls so they can't spam it
+  // Hide controls so users can't spam it
   document.getElementById("controller").style.display = "none";
 
-  ajax(
-    "/omegaball/ajax/run-simulation.php",
-    function() {
-      if (this.readyState != 4 || this.status != 200) return;
-      let obj = null;
-      try {
-        obj = JSON.parse(this.responseText);
-        console.log(obj);
-      } catch {
-        console.error(this.responseText);
-        return;
-      }
+  ajaxJson("/omegaball/ajax/run-simulation.php", function(obj) {
+    decode(obj);
+  }, "q="+JSON.stringify(args) );
+}
 
-      let output = document.getElementById("output");
+function decode(obj) {
+  let gameWindow = document.getElementById("game-window");
+  let outputEle = gameWindow.querySelector("[name='output']");
 
-      // Clear info
-      output.innerHTML = "";
+  // Clear info
+  outputEle.innerHTML = "";
 
-      // Display teams
-      displayTeams(obj.teams);
+  // Display teams
+  displayTeams(obj.teams);
 
-      // Display stats
-      let statsDiv = document.getElementById("stats");
-      let SECONDS = obj.game.length * 8;
-      statsDiv.innerHTML = `
-      Number of Messages `+obj.game.length +`<br>
-      Time to complete game: `+new Date(SECONDS * 1000).toISOString().slice(11, 19);
-
-
-      let delayTime = document.getElementById("speed").value;
-      for(let x=0;x<obj.game.length;x++) {
-        if(delayTime > 10)
-          setTimeout(
-            function () {
-              processTimeSlice( obj.game[x], (x == obj.game.length - 1) )
-            },
-            delayTime * x
-          );
-        else
+  let delayTime = document.getElementById("speed").value;
+  for(let x=0;x<obj.game.length;x++) {
+    if(delayTime > 10)
+      setTimeout(
+        function () {
           processTimeSlice( obj.game[x], (x == obj.game.length - 1) )
-      }
-    },
-    "q="+JSON.stringify(args)
-  );
+        },
+        delayTime * x
+      );
+    else
+      processTimeSlice( obj.game[x], (x == obj.game.length - 1) )
+  }
 }
 
 function processTimeSlice(timeSlice, end = false) {
@@ -133,9 +112,10 @@ function displayTeam(teamData, textAlign="center") {
   }
   team.appendChild( teamName );
 
-  // for(let x=0;x<teamData.players.length;x++) {
-  for(let key in teamData.players) {
-    let playerData = teamData.players[key];
+
+  for(let playerName in teamData.players) {
+    // Player name is needed elseware
+    let playerData = teamData.players[playerName];
 
     let player = document.createElement("p");
     if( playerData.inGame == false ) {
@@ -144,6 +124,7 @@ function displayTeam(teamData, textAlign="center") {
       player.style.textDecoration = 'line-through';
     }
 
+    // Extra is the balls held and out points that a player has
     let extra = "";
     for(let x=0;x<playerData.heldBalls;x++) {
       extra += "*";
@@ -153,7 +134,7 @@ function displayTeam(teamData, textAlign="center") {
     }
 
     // player.classList.add("indent");
-    player.innerHTML += (textAlign=="right")? extra + playerData.playerName: playerData.playerName + extra;
+    player.innerHTML += (textAlign=="right")? extra + playerName: playerName + extra;
     team.appendChild( player );
   }
 
@@ -162,31 +143,31 @@ function displayTeam(teamData, textAlign="center") {
 var selectedTeams = [];
 var optionElements = [];
 
-document.addEventListener("DOMContentLoaded", function() {
-  ajax("/omegaball/ajax/get-data.php", function() {
-    if (this.readyState != 4 || this.status != 200) return;
-    data = JSON.parse(this.responseText);
+// document.addEventListener("DOMContentLoaded", function() {
+//   ajax("/omegaball/ajax/get-data.php", function() {
+//     if (this.readyState != 4 || this.status != 200) return;
+//     data = JSON.parse(this.responseText);
 
-    let divisionElement = getDivisionElement({
-      "onClickTeam":function(args) {
-        if(args["selected"]) {
-          selectedTeams.push( args["teamIndex"] );
-        } else {
-          // Delete from array
-          selectedTeams.splice( selectedTeams.indexOf(args["teamIndex"]), 1 );
-        }
-      },
-      "multiSelect": true
-    });
+//     let divisionElement = getDivisionElement({
+//       "onClickTeam":function(args) {
+//         if(args["selected"]) {
+//           selectedTeams.push( args["teamIndex"] );
+//         } else {
+//           // Delete from array
+//           selectedTeams.splice( selectedTeams.indexOf(args["teamIndex"]), 1 );
+//         }
+//       },
+//       "multiSelect": true
+//     });
 
-    // divisionElement.style.width = "100%";
-    divisionElement.classList.add("centered");
+//     // divisionElement.style.width = "100%";
+//     divisionElement.classList.add("centered");
 
-    document.getElementById("teamSelector").appendChild(divisionElement);
+//     document.getElementById("teamSelector").appendChild(divisionElement);
 
-    createOption("displayPickupMessages", "Display Ball Pickup Messages");
-    createOption("useOutPoints", "Use out points");
-    createOption("defaultOutPointsAmount", "Default out points amount", {"2":"2", "3":"3"});
-    createOption("speed", "Display speed", {"80":"Fastest", "800":"Faster", "8000":"Normal"});
-  });
-});
+//     createOption("displayPickupMessages", "Display Ball Pickup Messages");
+//     createOption("useOutPoints", "Use out points");
+//     createOption("defaultOutPointsAmount", "Default out points amount", {"2":"2", "3":"3"});
+//     createOption("speed", "Display speed", {"80":"Fastest", "800":"Faster", "8000":"Normal"});
+//   });
+// });
