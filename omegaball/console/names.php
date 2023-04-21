@@ -25,7 +25,9 @@
             width: 33%;
         }
         </style>
-
+    <script>
+        ajaxJson("/omegaball/ajax/get-names.php", function(obj){console.log(obj);});
+        </script>
     </head>
 
   <header>
