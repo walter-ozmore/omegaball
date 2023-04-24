@@ -181,6 +181,8 @@ button {
   overflow: auto;
 }
 
+.error { color: red; }
+
 @media screen and (min-width: 34em) {
   .league-grid {
     grid-template-columns: 1fr 1fr;
