@@ -3,7 +3,7 @@
   <head>
     <title>Suggestions</title>
     <?php require_once realpath($_SERVER["DOCUMENT_ROOT"])."/omegaball/res/head.php";?>
-    <script>     
+    <script>
         /**
          * @brief Generates a Name.
          *
@@ -19,7 +19,7 @@
             let obj = JSON.parse(text);
             let gen = document.getElementById("generate");
             gen.innerHTML = "";
-            
+
             for(let name of obj)
             {
                 gen.appendChild(mkEle("p", name));
@@ -48,7 +48,7 @@
             if (first.checked && last.checked) {
                 console.log("This is both a first and last name");
                 pos = -1;
-            } 
+            }
             else if(last.checked){
                 console.log("This is a last name");
                 pos = 3;
@@ -63,8 +63,8 @@
                 error.innerHTML = "PLEASE SELECT FIRST, LAST, OR BOTH.";
                 error.style.display = "block";
             }
-            
-            
+
+
 
             let args ="pos="+pos+"&name="+name;
 
@@ -76,24 +76,25 @@
         }
     </script>
     <style>
-        .box {
-            width: 25em; /* set your desired width */
-            margin: auto; /* set margin to auto */
-            text-align: center;
-            align-items: center;
-            justify-content: center;
-            padding: 1.5em;
-            }
-            .errorMessage {
-            color: red; /* sets the text color to red */
-            }
+      .box {
+        width: 25em; /* set your desired width */
+        margin: 1em auto; /* set margin to auto */
+        text-align: center;
+        align-items: center;
+        justify-content: center;
+        padding: 1.5em;
+      }
 
-        .error {
-            display: block; /* shows the error message if the input is invalid */
-        }
-        .words{
-            margin: 1em 0em;
-        }
+      .errorMessage {
+        color: red; /* sets the text color to red */
+      }
+
+      .error {
+        display: block; /* shows the error message if the input is invalid */
+      }
+      .words {
+        margin: 0em 0em 1em 0em;
+      }
     </style>
   </head>
 
@@ -102,32 +103,31 @@
   </header>
   <body>
     <div class="box border">
-        <div id="generate">
-        </div>
-        <button onclick="generateNames()">
-            GENERATE NAMES
-        </button>
-    </div>
-    <div class="box border">
-        <p class="words">
-            Please input a name and designate first or last. If both, select both boxes.
-        </p>
+      <p class="words">
+        Please input a name and designate first or last. If both, select both boxes.
+      </p>
+
+      <p>
         <label for="name">NAME:</label>
         <input type="text" id="name" name="name">
-        <p class="words">
-        <p>
+      </p>
+
+      <p style="margin: 1em">
         <input type="checkbox" name="first" id="first">
         <label for="first">FIRST NAME</label>
-        </p>
-        <p>
+        <br>
         <input type="checkbox" name="last" id="last">
         <label for="last">LAST NAME</label>
-        </p>
-        <p class="words"></p>
-        <p class="errorMessage" style="display: none;" id="error"></p>
-        <button onclick="submitName()">
-            SUBMIT NAME
-        </button>
+      </p>
+
+      <p class="errorMessage" style="display: none;" id="error"></p>
+      <button onclick="submitName()">SUBMIT NAME</button>
+    </div>
+
+
+    <div class="box border">
+      <div id="generate"></div>
+      <button onclick="generateNames()">GENERATE NAMES</button>
     </div>
   </body>
 </html>
