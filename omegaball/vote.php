@@ -3,6 +3,8 @@
   <head>
     <title>Vote</title>
     <?php require_once realpath($_SERVER["DOCUMENT_ROOT"])."/omegaball/res/head.php"; ?>
+
+
     <style>
       h3 {
         margin-bottom: 0px;
@@ -32,6 +34,8 @@
         width: 100%;
       }
     </style>
+
+
     <script>
       function purchase() {
         let temp = createNotification();
@@ -145,7 +149,7 @@
         let outDiv = mkEle("div");
         outDiv.style.textAlign = "center";
         outDiv.classList.add("grid-holder");
-        
+
         // Building grid
         for(let vote of obj){
           let id = vote["id"];
@@ -188,46 +192,19 @@
   </header>
 
   <body>
-  <div class="grid-container">
+    <div class="grid-container">
       <!-- Directory -->
       <div id="directory" class="border">
-      <p>
-        <button class = "selected">
-        EDICTS
-        </button>
-      </p>
-      <p>
-        <button>
-        REWARDS
-        </button>
-      </p>
+        <p>
+          <button class="selected">EDICTS</button>
+        </p>
+        <p>
+          <button>REWARDS</button>
+        </p>
       </div>
       <div id="vote" class="border">
-        <center>
-          EDICTS
-          <p style = "color: gray">
-            Influence the Rules of Play.
-          </p>
-          <!-- <div class="grid-holder">
-            <div> SINKING SHIP </div>
-            <div><img class="vote-image" src="/omegaball/res/graphics/test/1x1.png" alt="Sinking Ship"></div>
-            <div><p>The team with the fewest wins at the end of each season will be eliminated and replaced.</p></div>
-            <div><button onclick = "submit()">VOTE</button></div>
-
-            <div> FORBIDDEN KNOWLEDGE </div>
-            <div><img class="vote-image" src="/omegaball/res/graphics/test/1x1.png" alt="Forbidden Knowledge"></div>
-            <div><p>Forbidden.</p></div>
-            <div><button onclick = "submit()">VOTE</button></div>
-
-            <div>SCOREBOARD</div>
-            <div><img class="vote-image" src="/omegaball/res/graphics/test/1x1.png" alt="Scoreboard"></div>
-            <div><p>Games will be decided based on a point-scoring system.</p></div>
-            <div><button onclick = "submit()">VOTE</button></div>
-          </div>  
-          <button onclick = "purchase()">
-            PURCHASE VOTES
-          </button> -->
-        </center>
+        <p style="text-align: center">EDICTS</p>
+        <p class="subtle text-center">Influence the Rules of Play.</p>
       </div>
     </div>
   </body>

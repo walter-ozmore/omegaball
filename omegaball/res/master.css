@@ -122,12 +122,12 @@ button {
 }
 
 .title img {
-    max-width: min(450px, 100vw);
-    min-width: 40vw;
+  max-width: min(450px, 100vw);
+  min-width: 40vw;
 }
 
 .sub {
-    font-size: min(18px, 2.5vw);
+  font-size: min(18px, 2.5vw);
 }
 
 .indent {
@@ -180,6 +180,9 @@ button {
   max-height: 40em;
   overflow: auto;
 }
+
+.subtle { color: gray; }
+.text-center { text-align: center; }
 
 @media screen and (min-width: 34em) {
   .league-grid {
