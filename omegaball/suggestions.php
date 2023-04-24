@@ -20,7 +20,7 @@
           gen.innerHTML = "";
 
           for(let name of obj) {
-              gen.appendChild(mkEle("p", name));
+            gen.appendChild(mkEle("p", name));
           }
         });
       }
@@ -41,16 +41,12 @@
         let name = document.getElementById("name").value;
 
         if (first.checked && last.checked) {
-          console.log("This is both a first and last name");
           pos = -1;
         } else if(last.checked) {
-          console.log("This is a last name");
           pos = 3;
         } else if(first.checked) {
-          console.log("This is a first name");
           pos = 1;
         } else {
-          console.log("Please select if the name is first, last, or both");
           let error = document.getElementById("error");
           error.innerHTML = "PLEASE SELECT FIRST, LAST, OR BOTH.";
           error.style.display = "block";
@@ -61,7 +57,6 @@
         ajax("/omegaball/ajax/add-name.php", function() {
           if(this.readyState != 4 || this.status != 200) return;
           let text = this.responseText;
-          console.log(text);
         }, args);
       }
     </script>
