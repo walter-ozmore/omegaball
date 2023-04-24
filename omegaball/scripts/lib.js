@@ -24,13 +24,15 @@ function checkSelected() {
   if(links == undefined) return;
   let url = window.location.href.split('?')[0];
 
-  let location = url.substring( url.indexOf("/omegaball/") + "/omegaball/".length );
-  location = location.substring(0, location.indexOf("/"));
+  let baseUrl = "/omegaball/";
+  let location = url.substring(url.indexOf(baseUrl) + baseUrl.length);
+  if( location.indexOf("/") > 0 )
+    location = location.substring(0, location.indexOf("/"));
 
   var children = links.children;
   for (var i = 0; i < children.length; i++) {
     var child = children[i];
-    console.log( child.innerHTML.toUpperCase()+" "+location.toUpperCase() );
+    // console.log( child.innerHTML.toUpperCase()+" "+location.toUpperCase() );
     if(child.innerHTML.toUpperCase() == location.toUpperCase()) {
       child.classList.add("selected");
     }

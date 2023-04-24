@@ -18,10 +18,6 @@
         margin-bottom: .5em;
         padding: .5em;
       }
-
-      .error {
-        color: red;
-      }
     </style>
 
     <script src="/account/version-3/lib.js"></script>
