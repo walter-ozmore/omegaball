@@ -24,9 +24,10 @@ function checkSelected() {
   if(links == undefined) return;
   let url = window.location.href.split('?')[0];
 
-  let location = url.substring( url.indexOf("/omegaball/") + "/omegaball/".length );
-  // location = location.substring(0, location.indexOf("/"));
-  // console.log("You are here => "+location);
+  let baseUrl = "/omegaball/";
+  let location = url.substring(url.indexOf(baseUrl) + baseUrl.length);
+  if( location.indexOf("/") > 0 )
+    location = location.substring(0, location.indexOf("/"));
 
   var children = links.children;
   for (var i = 0; i < children.length; i++) {

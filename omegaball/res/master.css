@@ -182,6 +182,11 @@ button {
 }
 
 .error { color: red; }
+.box {
+  width: 25em;
+  margin: .5em auto;
+  padding: .5em;
+}
 
 @media screen and (min-width: 34em) {
   .league-grid {

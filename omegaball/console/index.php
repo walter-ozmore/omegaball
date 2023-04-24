@@ -5,11 +5,6 @@
     <?php require_once realpath($_SERVER["DOCUMENT_ROOT"])."/omegaball/res/head.php"; ?>
 
     <style>
-      .box {
-        width: 25em; /* set your desired width */
-        margin: 0 auto; /* set margin to auto */
-        padding: .5em;
-      }
       .box a {
         display: block;
         margin-left: 1em;

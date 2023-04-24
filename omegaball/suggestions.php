@@ -6,14 +6,8 @@
 
     <style>
       .box {
-        width: 25em; /* set your desired width */
-        margin: 1em auto; /* set margin to auto */
         text-align: center;
-        align-items: center;
-        justify-content: center;
-        padding: 1.5em;
       }
-
       .words {
         margin: 0em 0em 1em 0em;
       }
