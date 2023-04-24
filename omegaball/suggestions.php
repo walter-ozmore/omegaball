@@ -3,13 +3,28 @@
   <head>
     <title>Suggestions</title>
     <?php require_once realpath($_SERVER["DOCUMENT_ROOT"])."/omegaball/res/head.php";?>
+
+    <style>
+      .box {
+        width: 25em; /* set your desired width */
+        margin: 1em auto; /* set margin to auto */
+        text-align: center;
+        align-items: center;
+        justify-content: center;
+        padding: 1.5em;
+      }
+
+      .words {
+        margin: 0em 0em 1em 0em;
+      }
+    </style>
+
     <script>
       /**
        * @brief Generates a Name.
        *
-       * Generates a first and last name using the information
-       * from the Names SQL Database
-       *
+       * Generates a first and last name using the information from the Names
+       * SQL Database
        */
       function generateNames() {
         ajax("/omegaball/ajax/name-gen.php", function() {
@@ -29,10 +44,9 @@
       /**
        * @brief Add a name to the SQL Database
        *
-       * Allows the users to submit name suggestions to the SQL
-       * Database. Checks if the name is a first name, last name,
-       * both, or neither. If neither, show an error.
-       *
+       * Allows the users to submit name suggestions to the SQL Database. Checks
+       * if the name is a first name, last name, both, or neither. If neither,
+       * show an error.
        */
       function submitName() {
         let first = document.getElementById("first");
@@ -60,20 +74,6 @@
         }, args);
       }
     </script>
-    <style>
-      .box {
-        width: 25em; /* set your desired width */
-        margin: 1em auto; /* set margin to auto */
-        text-align: center;
-        align-items: center;
-        justify-content: center;
-        padding: 1.5em;
-      }
-
-      .words {
-        margin: 0em 0em 1em 0em;
-      }
-    </style>
   </head>
 
   <header>

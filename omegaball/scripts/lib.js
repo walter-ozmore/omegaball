@@ -25,12 +25,13 @@ function checkSelected() {
   let url = window.location.href.split('?')[0];
 
   let location = url.substring( url.indexOf("/omegaball/") + "/omegaball/".length );
-  location = location.substring(0, location.indexOf("/"));
+  // location = location.substring(0, location.indexOf("/"));
+  // console.log("You are here => "+location);
 
   var children = links.children;
   for (var i = 0; i < children.length; i++) {
     var child = children[i];
-    console.log( child.innerHTML.toUpperCase()+" "+location.toUpperCase() );
+    // console.log( child.innerHTML.toUpperCase()+" "+location.toUpperCase() );
     if(child.innerHTML.toUpperCase() == location.toUpperCase()) {
       child.classList.add("selected");
     }
