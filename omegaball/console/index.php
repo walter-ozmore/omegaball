@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Title</title>
+    <?php require_once realpath($_SERVER["DOCUMENT_ROOT"])."/omegaball/res/head.php"; ?>
+
+    <style>
+      .box {
+        width: 25em; /* set your desired width */
+        margin: 0 auto; /* set margin to auto */
+        padding: .5em;
+      }
+      .box a {
+        display: block;
+        margin-left: 1em;
+      }
+      .box h2 {
+        margin: .5em 0;
+        padding: 0em;
+        border-bottom: solid;
+        border-color: gray;
+        width: 100%;
+      }
+    </style>
+  </head>
+
+  <header>
+    <?php require realpath($_SERVER["DOCUMENT_ROOT"])."/omegaball/res/header.php"; ?>
+  </header>
+
+  <body>
+    <div class="box border">
+      <h2>Admin Console</h2>
+      <a href="/omegaball/console/names.php">Suggested Names</a>
+      <a href="">Game Manager</a>
+
+      <h2>Test Pages</h2>
+      <a href="/omegaball/test/basic-page">Basic Page</a>
+      <a href="/omegaball/test/account-test">Account Test</a>
+      <a href="/omegaball/test/add-game">Add Game</a>
+      <a href="/omegaball/test/game-manager">Game Manager</a>
+      <a href="/omegaball/test/test-console">Test Console</a>
+      <a href="/omegaball/test/view-tracker">View Tracker</a>
+    </div>
+  </body>
+</html>
