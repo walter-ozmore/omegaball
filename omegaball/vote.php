@@ -3,6 +3,8 @@
   <head>
     <title>Vote</title>
     <?php require_once realpath($_SERVER["DOCUMENT_ROOT"])."/omegaball/res/head.php"; ?>
+
+
     <style>
       h3 {
         margin-bottom: 0px;
@@ -32,6 +34,8 @@
         width: 100%;
       }
     </style>
+
+
     <script>
       function purchase() {
         let temp = createNotification();
@@ -69,27 +73,27 @@
         temp.appendChild(cont);
       }
       function submit() {
-        let temp = createNotification();
+        let noti = createNotification();
         let ele = mkEle("p", "SUBMIT VOTES:");
-        temp.appendChild(ele);
+        noti.appendChild(ele);
         let line = mkEle("p", "ENTER THE NUMBER OF VOTES YOU WOULD <br>");
         line.style.display = "inline";
-        temp.appendChild(line);
+        noti.appendChild(line);
         let line2 = mkEle("p", "LIKE TO SUBMIT: <br>");
         line2.style.display = "inline";
-        temp.appendChild(line2);
+        noti.appendChild(line2);
         let buy = mkEle("p", "(THESE VOTES WILL BE CAST FOR THE SELECTED EDICT)");
         buy.style.color = "gray";
-        temp.appendChild(buy);
+        noti.appendChild(buy);
 
-        let x = document.createElement("INPUT");
-        x.setAttribute("type", "number");
-        x.setAttribute("min", "1");
-        x.style.display = "block";
-        x.style.marginLeft = "auto";
-        x.style.marginRight = "auto";
-        x.style.marginBottom = "1em";
-        temp.appendChild(x);
+        let input = document.createElement("INPUT");
+        input.setAttribute("type", "number");
+        input.setAttribute("min", "1");
+        input.style.display = "block";
+        input.style.marginLeft = "auto";
+        input.style.marginRight = "auto";
+        input.style.marginBottom = "1em";
+        noti.appendChild(input);
 
         let can = mkEle("button", "CANCEL");
         can.style.display = "inline";
@@ -103,6 +107,81 @@
         cont.style.display = "inline";
         temp.appendChild(cont);
       }
+
+      function submitVote() {
+        let voteNoti = createNotification();
+        let voteSubmit = mkEle("p", "SUBMIT VOTES:");
+        voteNoti.appendChild(voteSubmit);
+        let line = mkEle("p", "ENTER THE NUMBER OF VOTES YOU WOULD <br>");
+        line.style.display = "inline";
+        voteNoti.appendChild(line);
+        let line2 = mkEle("p", "LIKE TO SUBMIT: <br>");
+        line2.style.display = "inline";
+        voteNoti.appendChild(line2);
+
+        let inp = document.createElement("INPUT");
+        inp.setAttribute("type", "number");
+        inp.setAttribute("min", "1");
+        inp.style.display = "block";
+        inp.style.marginLeft = "auto";
+        inp.style.marginRight = "auto";
+        inp.style.marginBottom = "1em";
+        voteNoti.appendChild(inp);
+
+        let can = mkEle("button", "CANCEL");
+        can.style.display = "inline";
+        can.style.marginRight = "5em";
+        voteNoti.appendChild(can);
+        can.onclick = function() {
+          closeNotification(this);
+        };
+
+        let subButton = mkEle("button", "SUBMIT");
+        subButton.style.display = "inline";
+        voteNoti.appendChild(subButton);
+      }
+      // Get votes
+      // The args for the get-votes query. Change each season.
+      let args = {season: 0};
+
+      ajaxJson("/omegaball/ajax/get-votes.php", function(obj){
+
+        let outDiv = mkEle("div");
+        outDiv.style.textAlign = "center";
+        outDiv.classList.add("grid-holder");
+
+        // Building grid
+        for(let vote of obj){
+          let id = vote["id"];
+          let description = vote["description"];
+          let image = vote["image"];
+          let title = vote["title"];
+
+          outDiv.appendChild( mkEle("div", title) );
+          outDiv.appendChild( mkEle("div", "<img class='vote-image' src='"+title+"'>") );
+          outDiv.appendChild( mkEle("div", description) );
+
+          let voteDiv = mkEle("div");
+          let voteButton = mkEle("button", "VOTE");
+          voteButton.onclick = function() {
+          submitVote();
+          };
+          voteDiv.appendChild(voteButton);
+          outDiv.appendChild(voteDiv);
+        }
+
+        let purchaseDiv = mkEle("div");
+        purchaseDiv.style.textAlign = "center";
+        let purchaseButton = mkEle("button", "PURCHASE VOTES");
+        purchaseButton.onclick = function() {
+          purchase();
+        };
+        purchaseDiv.appendChild(purchaseButton);
+
+        document.getElementById("vote").appendChild(outDiv);
+        document.getElementById("vote").appendChild(purchaseDiv);
+      }, args);
+
     </script>
   </head>
 
@@ -113,48 +192,19 @@
   </header>
 
   <body>
-  <div class="grid-container">
+    <div class="grid-container">
       <!-- Directory -->
       <div id="directory" class="border">
-      <p>
-        <button class = "selected">
-        EDICTS
-        </button>
-      </p>
-      <p>
-        <button>
-        REWARDS
-        </button>
-      </p>
+        <p>
+          <button class="selected">EDICTS</button>
+        </p>
+        <p>
+          <button>REWARDS</button>
+        </p>
       </div>
-
-      <!-- Vote Info -->
       <div id="vote" class="border">
-        <center>
-          EDICTS
-          <p style = "color: gray">
-            Influence the Rules of Play.
-          </p>
-          <div class="grid-holder">
-            <div> <p>SINKING SHIP</p> </div>
-            <div><img class="vote-image" src="/omegaball/res/graphics/test/1x1.png" alt="Sinking Ship"></div>
-            <div><p>The team with the fewest wins at the end of each season will be eliminated and replaced.</p></div>
-            <div><button onclick = "submit()">VOTE</button></div>
-
-            <div> <p>FORBIDDEN KNOWLEDGE</p> </div>
-            <div><img class="vote-image" src="/omegaball/res/graphics/test/1x1.png" alt="Sinking Ship"></div>
-            <div><p>Forbidden.</p></div>
-            <div><button onclick = "submit()">VOTE</button></div>
-
-            <div><p>SCOREBOARD</p></div>
-            <div><img class="vote-image" src="/omegaball/res/graphics/test/1x1.png" alt="Sinking Ship"></div>
-            <div><p>Games will be decided based on a point-scoring system.</p></div>
-            <div><button onclick = "submit()">VOTE</button></div>
-          </div>
-          <button onclick = "purchase()">
-            PURCHASE VOTES
-          </button>
-        </center>
+        <p style="text-align: center">EDICTS</p>
+        <p class="subtle text-center">Influence the Rules of Play.</p>
       </div>
     </div>
   </body>
