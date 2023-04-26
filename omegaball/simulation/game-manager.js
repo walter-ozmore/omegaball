@@ -1,4 +1,58 @@
 class GameManager {
+  generate(args = {}, returnFunction = null, display = true) {
+    args = {
+      actions: ["generate"],
+      gameArgs: {
+        teams: ["STYX", "AXOL"]
+      }
+    };
+    // clearGame(gameManager);
+
+    ajaxJson( "/omegaball/simulation/ajax.php", function(obj) {
+      if( returnFunction !== null ) returnFunction(obj);
+      // Add disclaimer that the game is not saved
+
+      for(let timeSlice of obj.game) {
+        gameManager.processTimeSlice(timeSlice, gameManager);
+      }
+    }, args );
+  }
+
+
+  save() {
+    let args = { actions: ["save"] };
+    ajaxJson( "/omegaball/simulation/ajax.php", null, args );
+  }
+
+  load(gameID) {
+    let args = {
+      actions: ["load"],
+      gameID: gameID
+    };
+    this.clearGame(gameManager);
+
+    ajaxJson( "/omegaball/simulation/ajax.php", function(obj) {
+      for(let timeSlice of obj.game) {
+        gameManager.processTimeSlice(timeSlice, gameManager);
+      }
+    }, args );
+  }
+
+
+  /**
+   * Loads the list of games including their names
+   * @param {*} returnFunction
+   */
+  loadTitles(returnFunction) {
+    let args = {
+      actions: ["loadTitles"]
+    };
+
+    ajaxJson( "/omegaball/simulation/ajax.php", function(obj) {
+      returnFunction(obj);
+    }, args );
+  }
+
   /**
    * Adds a display element to the game manager. All future games loaded and
    * generated will apear on the given element
@@ -6,6 +60,8 @@ class GameManager {
    * @param {*} element
    */
   addWindow(element) {
+    this.window = element;
+
     this.teamDisplay = mkEle("div");
     this.teamDisplay.classList.add("game-window-team-display");
     element.appendChild(this.teamDisplay);
@@ -20,72 +76,14 @@ class GameManager {
    * Clears the loaded game from the class's memory and resets the display
    */
   clearGame(gameManager = this) {
+    // if(typeof this.window !== 'undefined') return;
+
     // Clear info
     gameManager.teams = [];
     gameManager.teamDisplay.innerHTML = "";
     gameManager.textDiv.innerHTML = "";
   }
 
-  runGame(args = {}, returnFunction = null, display = true) {
-    args = {
-      action: "gna",
-      teams: ["STYX", "AXOL"]
-    };
-    clearGame(gameManager);
-
-    ajaxJson( "/omegaball/simulation/ajax.php", function(obj) {
-      if( returnFunction !== null ) returnFunction(obj);
-      if(!display) return;
-
-      clearGame(gameManager);
-
-      for(let timeSlice of obj.game) {
-        gameManager.processTimeSlice(timeSlice, gameManager);
-      }
-
-      // for(let x=0;x<obj.game.length;x++) {
-      //   let timeSlice = obj.game[x];
-
-      //   gameManager.processTimeSlice(timeSlice, gameManager);
-      // }
-
-      console.log( JSON.stringify(obj) );
-    }, args );
-  }
-
-
-  loadGame(gameID) {
-    let args = {
-      action: "loadGame",
-      gameID: gameID
-    };
-    clearGame(gameManager);
-
-    ajaxJson( "/omegaball/simulation/ajax.php", function(obj) {
-      // for(let x=0;x<obj.game.length;x++) {
-      //   let timeSlice = obj.game[x];
-      //   gameManager.processTimeSlice(timeSlice, gameManager);
-      // }
-      for(let timeSlice of obj.game) {
-        gameManager.processTimeSlice(timeSlice, gameManager);
-      }
-    }, args );
-  }
-
-
-  /**
-   * Loads the list of games including their names
-   * @param {*} returnFunction
-   */
-  loadGameList(returnFunction) {
-    let args = {
-      action: "loadGameTitles"
-    };
-
-    ajaxJson( "/omegaball/simulation/ajax.php", function(obj) {
-      returnFunction(obj);
-    }, args );
-  }
 
   /**
    * Processes the slice of time, or the message
@@ -94,6 +92,8 @@ class GameManager {
    * @param {*} end Indicates if this time is the last message
    */
   processTimeSlice(timeSlice, end = false) {
+    // if(typeof this.window !== 'undefined') return;
+
     let message = document.createElement("p");
     message.innerHTML = timeSlice.message;
 

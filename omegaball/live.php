@@ -2,9 +2,7 @@
 <html>
   <head>
     <title>Live</title>
-    <?php
-      require_once realpath($_SERVER["DOCUMENT_ROOT"])."/omegaball/res/head.php";
-    ?>
+    <?php require_once realpath($_SERVER["DOCUMENT_ROOT"])."/omegaball/res/head.php"; ?>
 
     <style>
       .teams {
@@ -88,50 +86,17 @@
       }
     </style>
 
-    <!-- <script src="/omegaball/scripts/live.js"></script> -->
     <script src="/omegaball/simulation/game-manager.js"></script>
     <script>
-      // function createOption(id, label, options={"true":"True", "false":"False"}) {
-      //   // id = id.toLowerCase();
-
-      //   let optionsStr = "";
-      //   for (const [key, value] of Object.entries(options)) {
-      //     optionsStr += `<option value="${key}">${value}</option>`;
-      //   }
-
-      //   let innerHTML = `
-      //     <label>${label}</label>
-      //     <select id='${id}'>
-      //       ${optionsStr}
-      //     </select><br>
-      //   `;
-
-      //   document.getElementById("settings").innerHTML += innerHTML;
-      //   optionElements.push( id );
-      // }
-
-      function runGame() {
-        gameManager.addWindow( document.getElementById("game-window") );
-        gameManager.runGame({}, function(obj) {
-          let txt = JSON.stringify(obj);
-        });
-      }
-
-      function gna() {
-        gameManager.addWindow( document.getElementById("game-window") );
-        gameManager.runGame({}, function(obj) {
-          let txt = JSON.stringify(obj);
-        });
-      }
-
       function addGames(obj) {
         let selector = document.getElementById("game-selector");
+        selector.innerHTML = "";
         for(let entry of obj) {
           let ele = mkEle("button", entry["title"]);
 
           ele.onclick = function() {
             toggleHighlight(ele, selector);
-            gameManager.loadGame( entry["gameID"] );
+            gameManager.load( entry["gameID"] );
           };
 
           selector.appendChild(ele);
@@ -139,24 +104,14 @@
       }
 
       onWindowLoad(function() {
-
-
-        // addGame("<span style='color: #00A4FF;'>AEON</span> vs. <span style='color: #8D2200;'>ARCH</span>");
-        // for(let x=1;x<=10;x++) {
-        //   addGame("Game "+x);
-        // }
-
-        // runGame();
         gameManager.addWindow( document.getElementById("game-window") );
-        gameManager.loadGameList(addGames);
+        gameManager.loadTitles(addGames);
       });
     </script>
   </head>
 
   <header>
-    <?php
-      require realpath($_SERVER["DOCUMENT_ROOT"])."/omegaball/res/header.php";
-    ?>
+    <?php require realpath($_SERVER["DOCUMENT_ROOT"])."/omegaball/res/header.php"; ?>
   </header>
 
   <body>
@@ -164,6 +119,7 @@
       <div id="game-selector" class="border game-selector"></div>
       <div id="game-window" class="border game-window"></div>
     </div>
-    <button onclick="gna();">Create New Game</button>
+    <button onclick="gameManager.generate();">Create New Game</button>
+    <button onclick="gameManager.save(); gameManager.loadTitles(addGames);">Save Game</button>
   </body>
 </html>

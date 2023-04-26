@@ -1,4 +1,7 @@
 <?php
+  // Start session to save the loaded game data
+  session_start();
+
   ini_set('display_errors', '1');
   ini_set('display_startup_errors', '1');
   error_reporting(E_ALL);
@@ -7,41 +10,51 @@
   require_once realpath($_SERVER["DOCUMENT_ROOT"])."/res/secure/database.php";
   require_once realpath($_SERVER["DOCUMENT_ROOT"])."/res/lib.php";
 
-  $args = json_decode($_POST["q"], true);
-
-  if(strcmp($args["action"], "generate") == 0) {
-    require_once realpath($_SERVER["DOCUMENT_ROOT"])."/omegaball/simulation/simulate-game.php";
-    $response = runGame($args);
-    echo json_encode( $response );
+  function setGame($obj) {
+    $_SESSION["game"] = $obj;
   }
 
-  // Generates a game and adds it to the game list
-  if(strcmp($args["action"], "gna") == 0) {
+  function resetGame() {
+    unset( $_SESSION["game"] );
+  }
+
+  function saveGameToSQL() {
+    $gameObj = $_SESSION["game"];
+
     require_once realpath($_SERVER["DOCUMENT_ROOT"])."/omegaball/simulation/simulate-game.php";
     $conn = connectDB("newOmegaball");
-    $response = runGame($args);
+    $gameObj = $_SESSION["game"];
     $title = "Missing Title";
     $releaseTime = time();
-    $encode = addslashes( json_encode($response) );
+    // TODO reduce for sql
+    $encode = addslashes( json_encode($gameObj) );
     $query = "INSERT INTO Game (json, title, releaseTime) VALUES (\"$encode\", \"$title\", $releaseTime);";
-    echo $query;
     runQuery($conn, $query);
-    // echo json_encode($re);
   }
 
+  function generate($args) {
+    require_once realpath($_SERVER["DOCUMENT_ROOT"])."/omegaball/simulation/simulate-game.php";
+    $gameObj = runGame($args);
 
-  if(strcmp($args["action"], "loadGame") == 0) {
+    // Save game to session in case to user want to save it to SQL later
+    setGame($gameObj);
+
+    echo json_encode( $gameObj );
+    return $gameObj;
+  }
+
+  function load($gameID) {
+    // echo "here";
     $conn = connectDB("newOmegaball");
-    $query = "SELECT json FROM Game WHERE gameID=".$args["gameID"];
+    $query = "SELECT json FROM Game WHERE gameID=$gameID";
     $result = runQuery($conn, $query);
     while ($row = $result->fetch_assoc()) {
-      $json = $row["json"];
+      $jsonStr = $row["json"];
     }
-    echo $json;
+    echo $jsonStr;
   }
 
-
-  if(strcmp($args["action"], "loadGameTitles") == 0) {
+  function loadTitles() {
     $conn = connectDB("newOmegaball");
     $query = "SELECT gameID, title FROM Game";
     $result = runQuery($conn, $query);
@@ -51,5 +64,17 @@
       $json[] = $row;
     }
     echo json_encode( $json );
+  }
+
+  function equals($str_a, $str_b) { return strcmp($str_a, $str_b) == 0; }
+
+  $args = json_decode($_POST["q"], true);
+
+  $actions = $args["actions"];
+  foreach($actions as $action) {
+    if(equals($action, "generate"      )) generate($args["gameArgs"]);
+    if(equals($action, "save"          )) saveGameToSQL();
+    if(equals($action, "load"          )) load($args["gameID"]);
+    if(equals($action, "loadTitles"    )) loadTitles();
   }
 ?>
