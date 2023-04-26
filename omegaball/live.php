@@ -2,9 +2,7 @@
 <html>
   <head>
     <title>Live</title>
-    <?php
-      require_once realpath($_SERVER["DOCUMENT_ROOT"])."/omegaball/res/head.php";
-    ?>
+    <?php require_once realpath($_SERVER["DOCUMENT_ROOT"])."/omegaball/res/head.php"; ?>
 
     <style>
       .teams {
@@ -62,48 +60,64 @@
 
       /* Change the background color of the dropdown button when the dropdown content is shown */
       .dropdown:hover {background-color: rgba(255, 255, 255, .1);}
+
+      .game-selector {
+        width: 10em;
+      }
+      .game-selector button {
+        width: 100%;
+        text-align: center;
+        display: block;
+        background-color: unset;
+        color: white;
+      }
+      .game-selector button:hover {
+        background-color: gray;
+      }
+      .wrapper {
+        display: flex;
+      }
+      .game-window {
+        width: 100%;
+      }
+      .game-window-team-display {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+      }
     </style>
 
-    <script src="/omegaball/scripts/live.js"></script>
+    <script src="/omegaball/simulation/game-manager.js"></script>
     <script>
-      function createOption(id, label, options={"true":"True", "false":"False"}) {
-        // id = id.toLowerCase();
+      function addGames(obj) {
+        let selector = document.getElementById("game-selector");
+        selector.innerHTML = "";
+        for(let entry of obj) {
+          let ele = mkEle("button", entry["title"]);
 
-        let optionsStr = "";
-        for (const [key, value] of Object.entries(options)) {
-          optionsStr += `<option value="${key}">${value}</option>`;
+          ele.onclick = function() {
+            toggleHighlight(ele, selector);
+            gameManager.load( entry["gameID"] );
+          };
+
+          selector.appendChild(ele);
         }
-
-        let innerHTML = `
-          <label>${label}</label>
-          <select id='${id}'>
-            ${optionsStr}
-          </select><br>
-        `;
-
-        document.getElementById("settings").innerHTML += innerHTML;
-        optionElements.push( id );
       }
+
+      onWindowLoad(function() {
+        gameManager.addWindow( document.getElementById("game-window") );
+        gameManager.loadTitles(addGames);
+      });
     </script>
   </head>
 
   <header>
-    <?php
-      require realpath($_SERVER["DOCUMENT_ROOT"])."/omegaball/res/header.php";
-    ?>
+    <?php require realpath($_SERVER["DOCUMENT_ROOT"])."/omegaball/res/header.php"; ?>
   </header>
 
   <body>
-    <div id="controller">
-      <div id="teamSelector"></div>
-      <div id="settings"></div>
-
-      <button onclick="run()">Start Match</button>
+    <div class="wrapper">
+      <div id="game-selector" class="border game-selector"></div>
+      <div id="game-window" class="border game-window"></div>
     </div>
-
-
-    <div id="teams" class="teams"></div>
-    <div id="stats"></div>
-    <div class="output" id="output"></div>
   </body>
 </html>

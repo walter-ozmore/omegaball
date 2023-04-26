@@ -1,7 +1,67 @@
 class GameManager {
+  generate(args = {}, returnFunction = null, display = true) {
+    args = {
+      actions: ["generate"],
+      gameArgs: args
+    };
+    this.clearGame(gameManager);
+
+    ajaxJson( "/omegaball/simulation/ajax.php", function(obj) {
+      if( returnFunction !== null ) returnFunction(obj);
+      // Add disclaimer that the game is not saved
+
+      for(let timeSlice of obj.game) {
+        gameManager.processTimeSlice(timeSlice, gameManager);
+      }
+    }, args );
+  }
+
+
+  save() {
+    let args = { actions: ["save"] };
+    ajaxJson( "/omegaball/simulation/ajax.php", null, args );
+  }
+
+  load(gameID) {
+    let args = {
+      actions: ["load"],
+      gameID: gameID
+    };
+    this.clearGame(gameManager);
+
+    ajaxJson( "/omegaball/simulation/ajax.php", function(obj) {
+      for(let timeSlice of obj.game) {
+        gameManager.processTimeSlice(timeSlice, gameManager);
+      }
+    }, args );
+  }
+
+
+  /**
+   * Loads the list of games including their names
+   * @param {*} returnFunction
+   */
+  loadTitles(returnFunction) {
+    let args = {
+      actions: ["loadTitles"]
+    };
+
+    ajaxJson( "/omegaball/simulation/ajax.php", function(obj) {
+      returnFunction(obj);
+    }, args );
+  }
+
+  /**
+   * Adds a display element to the game manager. All future games loaded and
+   * generated will apear on the given element
+   *
+   * @param {*} element
+   */
   addWindow(element) {
+    this.window = element;
 
     this.teamDisplay = mkEle("div");
+    this.teamDisplay.classList.add("game-window-team-display");
     element.appendChild(this.teamDisplay);
 
     this.textDiv = mkEle("div");
@@ -9,41 +69,17 @@ class GameManager {
     element.appendChild(this.textDiv);
   }
 
-  debug_countBalls(timeSlice) {
-    let heldBallCount = 0;
 
-    if(Object.hasOwn(timeSlice, "teams")){
-      for(let teamAcronym in timeSlice.teams) {
-        for(let playerName in timeSlice.teams[teamAcronym].players) {
-          let player = timeSlice.teams[teamAcronym].players[playerName];
-          heldBallCount += player.heldBalls;
-        }
-      }
-    }
+  /**
+   * Clears the loaded game from the class's memory and resets the display
+   */
+  clearGame(gameManager = this) {
+    // if(typeof this.window !== 'undefined') return;
 
-    return heldBallCount + "/" + (timeSlice.data!==undefined)? timeSlice.data.ballsOnGround: "UKN";
-  }
-
-  runGame(args = {}, returnFunction = null, display = true) {
-    args = {
-      teams: ["STYX", "HEAV"]
-    };
-
-    ajaxJson( "/omegaball/simulation/ajax.php", function(obj) {
-      if( returnFunction !== null ) returnFunction(obj);
-      if(!display) return;
-
-      // Clear info
-      gameManager.textDiv.innerHTML = "";
-
-      for(let x=0;x<obj.game.length;x++) {
-        let timeSlice = obj.game[x];
-
-        gameManager.processTimeSlice(timeSlice, gameManager);
-      }
-
-      console.log("job done");
-    }, args );
+    // Clear info
+    gameManager.teams = [];
+    gameManager.teamDisplay.innerHTML = "";
+    gameManager.textDiv.innerHTML = "";
   }
 
 
@@ -73,9 +109,9 @@ class GameManager {
 
 
   /**
-   * @brief Updates the teams dynamicly based on the information given. Ideally the
-   * first time this runs all players and teams will be given then this can be
-   * run with partial updates.
+   * @brief Updates the teams dynamicly based on the information given. Ideally
+   * the first time this runs all players and teams will be given then this can
+   * be run with partial updates.
    *
    * Example first run gives all teams and players, second run only given one
    * player that has picked up a ball, only that players element will be changed
@@ -135,9 +171,7 @@ class GameManager {
         // By here we know that a player does exists. Either we made it or it
         // already exists
         let player = team["players"][playerName];
-        let ballCounter = "hii";
-        for(let x=0;x<freshPlayer["heldBalls"];x++) ballCounter += "*";
-        player.div.innerHTML = player.playerName + ballCounter;
+        player.div.innerHTML = player.playerName;
       }
     }
 
