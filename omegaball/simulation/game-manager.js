@@ -1,6 +1,11 @@
 class GameManager {
+  /**
+   * Adds a display element to the game manager. All future games loaded and
+   * generated will apear on the given element
+   *
+   * @param {*} element
+   */
   addWindow(element) {
-
     this.teamDisplay = mkEle("div");
     this.teamDisplay.classList.add("game-window-team-display");
     element.appendChild(this.teamDisplay);
@@ -10,28 +15,77 @@ class GameManager {
     element.appendChild(this.textDiv);
   }
 
+
+  /**
+   * Clears the loaded game from the class's memory and resets the display
+   */
+  clearGame(gameManager = this) {
+    // Clear info
+    gameManager.teams = [];
+    gameManager.teamDisplay.innerHTML = "";
+    gameManager.textDiv.innerHTML = "";
+  }
+
   runGame(args = {}, returnFunction = null, display = true) {
     args = {
-      teams: ["STYX", "HEAV"]
+      action: "gna",
+      teams: ["STYX", "AXOL"]
     };
+    clearGame(gameManager);
 
     ajaxJson( "/omegaball/simulation/ajax.php", function(obj) {
       if( returnFunction !== null ) returnFunction(obj);
       if(!display) return;
 
-      // Clear info
-      gameManager.textDiv.innerHTML = "";
+      clearGame(gameManager);
 
-      for(let x=0;x<obj.game.length;x++) {
-        let timeSlice = obj.game[x];
-
+      for(let timeSlice of obj.game) {
         gameManager.processTimeSlice(timeSlice, gameManager);
       }
 
-      console.log("job done");
+      // for(let x=0;x<obj.game.length;x++) {
+      //   let timeSlice = obj.game[x];
+
+      //   gameManager.processTimeSlice(timeSlice, gameManager);
+      // }
+
+      console.log( JSON.stringify(obj) );
     }, args );
   }
 
+
+  loadGame(gameID) {
+    let args = {
+      action: "loadGame",
+      gameID: gameID
+    };
+    clearGame(gameManager);
+
+    ajaxJson( "/omegaball/simulation/ajax.php", function(obj) {
+      // for(let x=0;x<obj.game.length;x++) {
+      //   let timeSlice = obj.game[x];
+      //   gameManager.processTimeSlice(timeSlice, gameManager);
+      // }
+      for(let timeSlice of obj.game) {
+        gameManager.processTimeSlice(timeSlice, gameManager);
+      }
+    }, args );
+  }
+
+
+  /**
+   * Loads the list of games including their names
+   * @param {*} returnFunction
+   */
+  loadGameList(returnFunction) {
+    let args = {
+      action: "loadGameTitles"
+    };
+
+    ajaxJson( "/omegaball/simulation/ajax.php", function(obj) {
+      returnFunction(obj);
+    }, args );
+  }
 
   /**
    * Processes the slice of time, or the message
