@@ -61,10 +61,18 @@ h1 {
 button {
   background-color: #FFFFFF;
   color: black;
-  border: none;
+  border: solid;
+  border-color: white;
+  border-width: 1px;
   text-align: center;
   text-decoration: none;
   cursor: pointer;
+  padding: 1px;
+}
+
+button:disabled {
+  background-color: #555;
+  color: white;
 }
 
 /* ---- END GLOBAL ---- */

@@ -119,7 +119,5 @@
       <div id="game-selector" class="border game-selector"></div>
       <div id="game-window" class="border game-window"></div>
     </div>
-    <button onclick="gameManager.generate();">Create New Game</button>
-    <button onclick="gameManager.save(); gameManager.loadTitles(addGames);">Save Game</button>
   </body>
 </html>

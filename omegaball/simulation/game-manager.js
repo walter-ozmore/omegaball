@@ -2,11 +2,9 @@ class GameManager {
   generate(args = {}, returnFunction = null, display = true) {
     args = {
       actions: ["generate"],
-      gameArgs: {
-        teams: ["STYX", "AXOL"]
-      }
+      gameArgs: args
     };
-    // clearGame(gameManager);
+    this.clearGame(gameManager);
 
     ajaxJson( "/omegaball/simulation/ajax.php", function(obj) {
       if( returnFunction !== null ) returnFunction(obj);
@@ -92,8 +90,6 @@ class GameManager {
    * @param {*} end Indicates if this time is the last message
    */
   processTimeSlice(timeSlice, end = false) {
-    // if(typeof this.window !== 'undefined') return;
-
     let message = document.createElement("p");
     message.innerHTML = timeSlice.message;
 

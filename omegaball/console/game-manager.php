@@ -5,6 +5,10 @@
     <?php require_once realpath($_SERVER["DOCUMENT_ROOT"])."/omegaball/res/head.php"; ?>
 
     <style>
+      .box {
+        width: 35em;
+      }
+
       .teams {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -72,18 +76,62 @@
 
     <script src="/omegaball/simulation/game-manager.js"></script>
     <script>
+      var selectedTeams = [];
+      var saveButton = null;
+      var simulateButton = null;
+
+      function onTeamClick(args) {
+        if(args.selected)
+          selectedTeams.push(args.teamIndex);
+        else {
+          let index = selectedTeams.indexOf(args.teamIndex);
+          if(index > -1) {
+            selectedTeams.splice(index, 1);
+          }
+        }
+
+        simulateButton.disabled = selectedTeams.length <= 1;
+      }
+
       function buildController() {
-        let divisionEle = getDivisionElement();
+        let divisionEle = getDivisionElement({
+          multiSelect: true,
+          onClickTeam: onTeamClick
+        });
 
         let controllerEle = document.getElementById("controller");
         controllerEle.appendChild(divisionEle);
 
-        let button = null;
-        button = mkEle("button", "Simulate Game");
-        controllerEle.appendChild(button);
+        simulateButton = mkEle("button", "Simulate Game");
+        simulateButton.disabled = true;
+        simulateButton.onclick = function() {
+          gameManager.generate({
+            teams: selectedTeams
+          }, function() {
+            saveButton.disabled = false;
+          });
+        };
+        controllerEle.appendChild(simulateButton);
 
-        button = mkEle("button", "Save Game");
-        controllerEle.appendChild(button);
+        // Create a new datetime input element
+        let datetimeInput = document.createElement("input");
+        datetimeInput.type = "datetime-local";
+        datetimeInput.id = "datetime";
+        datetimeInput.name = "datetime";
+
+        // Set the default value of the datetime input element to the current date and time
+        let now = new Date();
+        let dateString = now.toISOString().slice(0, 16);
+        datetimeInput.value = dateString;
+
+        controllerEle.appendChild( datetimeInput );
+
+        saveButton = mkEle("button", "Save Game");
+        saveButton.disabled = true;
+        saveButton.onclick = function() {
+          gameManager.save();
+        }
+        controllerEle.appendChild(saveButton);
       }
       onWindowLoad(function() {
         gameManager.addWindow( document.getElementById("game-window") );
@@ -97,10 +145,7 @@
   </header>
 
   <body>
-    <div id="controller" class="box border">
-      <button onclick="gameManager.generate();">Create New Game</button>
-      <button onclick="gameManager.save();">Save Game</button>
-    </div>
+    <div id="controller" class="box border"></div>
     <div id="game-window" class="border game-window"></div>
   </body>
 </html>
