@@ -119,6 +119,7 @@ button {
   width: fit-content;
   padding-top: 1.5em;
   margin: 0 auto 1.5em auto;
+  text-align: center;
 }
 
 .title img {

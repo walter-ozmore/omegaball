@@ -30,12 +30,9 @@ function checkSelected() {
     location = location.substring(0, location.indexOf("/"));
 
   var children = links.children;
-  for (var i = 0; i < children.length; i++) {
-    var child = children[i];
-    // console.log( child.innerHTML.toUpperCase()+" "+location.toUpperCase() );
-    if(child.innerHTML.toUpperCase() == location.toUpperCase()) {
-      child.classList.add("selected");
-    }
+  for (var child of children) {
+    if(child.innerHTML.toUpperCase() == location.toUpperCase())
+      highlight(child);
   }
 }
 

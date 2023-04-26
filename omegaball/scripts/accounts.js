@@ -16,6 +16,12 @@ class Accounts {
           returnFunction(user);
         }
 
+        // // Add new links
+        // addNavLink("VOTE", "/omegaball/vote");
+        // if(user.consoleAccess == 1)
+        //   addNavLink("CONSOLE", "/omegaball/console/index");
+        // addNavLink("SUGGESTIONS", "/omegaball/suggestions");
+
         // Update all current user elements
         let elements;
 
@@ -103,6 +109,13 @@ class Accounts {
     for (let i = 0; i < elements.length; i++) {
       let ele = elements[i];
       ele.innerHTML = currentUser.team;
+      ele.style.display = "block";
+    }
+
+    elements = document.getElementsByName("cu-votes");
+    for (let i = 0; i < elements.length; i++) {
+      let ele = elements[i];
+      ele.innerHTML = currentUser.votes;
       ele.style.display = "block";
     }
   }
