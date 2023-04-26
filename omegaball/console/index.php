@@ -27,7 +27,7 @@
     <div class="box border">
       <h2>Admin Console</h2>
       <a href="/omegaball/console/names.php">Suggested Names</a>
-      <a href="">Game Manager</a>
+      <a href="/omegaball/console/game-manager.php">Game Manager</a>
 
       <h2>Test Pages</h2>
       <a href="/omegaball/test/basic-page">Basic Page</a>

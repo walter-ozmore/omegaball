@@ -176,7 +176,7 @@ button {
 
 /* Game Viewer */
 .game-text-viewer {
-  padding: 4em;
+  padding: .5em;
   max-height: 40em;
   overflow: auto;
 }
