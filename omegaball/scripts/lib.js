@@ -203,7 +203,11 @@ function unHighlight(element, recursive = false) {
 
   if( element.classList.contains("selected") ) {
     element.classList.remove("selected");
-    element.style.color = element.style.backgroundColor;
+
+    // We use this one now so that the color doesnt not have to be set
+    // on the element but could be in a class
+    // element.style.color = element.style.backgroundColor;
+    element.style.color = window.getComputedStyle(element).backgroundColor;
     element.style.backgroundColor = "unset";
   }
 }
@@ -213,7 +217,10 @@ function highlight(element) {
     return;
   element.classList.add('selected');
 
-  element.style.backgroundColor = element.style.color;
+  // We use this one now so that the color doesnt not have to be set
+  // on the element but could be in a class
+  // element.style.backgroundColor = element.style.color;
+  element.style.backgroundColor = window.getComputedStyle(element).color;
   element.style.color = "black";
 }
 

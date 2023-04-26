@@ -2,26 +2,12 @@ class GameManager {
   addWindow(element) {
 
     this.teamDisplay = mkEle("div");
+    this.teamDisplay.classList.add("game-window-team-display");
     element.appendChild(this.teamDisplay);
 
     this.textDiv = mkEle("div");
     this.textDiv.classList.add("game-text-viewer");
     element.appendChild(this.textDiv);
-  }
-
-  debug_countBalls(timeSlice) {
-    let heldBallCount = 0;
-
-    if(Object.hasOwn(timeSlice, "teams")){
-      for(let teamAcronym in timeSlice.teams) {
-        for(let playerName in timeSlice.teams[teamAcronym].players) {
-          let player = timeSlice.teams[teamAcronym].players[playerName];
-          heldBallCount += player.heldBalls;
-        }
-      }
-    }
-
-    return heldBallCount + "/" + (timeSlice.data!==undefined)? timeSlice.data.ballsOnGround: "UKN";
   }
 
   runGame(args = {}, returnFunction = null, display = true) {
@@ -73,9 +59,9 @@ class GameManager {
 
 
   /**
-   * @brief Updates the teams dynamicly based on the information given. Ideally the
-   * first time this runs all players and teams will be given then this can be
-   * run with partial updates.
+   * @brief Updates the teams dynamicly based on the information given. Ideally
+   * the first time this runs all players and teams will be given then this can
+   * be run with partial updates.
    *
    * Example first run gives all teams and players, second run only given one
    * player that has picked up a ball, only that players element will be changed
@@ -135,9 +121,7 @@ class GameManager {
         // By here we know that a player does exists. Either we made it or it
         // already exists
         let player = team["players"][playerName];
-        let ballCounter = "hii";
-        for(let x=0;x<freshPlayer["heldBalls"];x++) ballCounter += "*";
-        player.div.innerHTML = player.playerName + ballCounter;
+        player.div.innerHTML = player.playerName;
       }
     }
 
