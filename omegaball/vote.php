@@ -77,6 +77,7 @@
         {
           cont.onclick = function() {
             let args = {numVotes : inputEle.value};
+            let not = this;
             ajaxJson("/omegaball/ajax/update-user-votes.php", function(obj){
               for(let code of obj){
                 // Check if the user successfully bought votes
@@ -84,8 +85,8 @@
                   alert("Not enough funds");
                 }
                 else if (code == 0) {
-                  alert("Success");
-                  closeNotification(this);
+                  // alert("Success");
+                  closeNotification(not);
                 }
               }
             }, args);
