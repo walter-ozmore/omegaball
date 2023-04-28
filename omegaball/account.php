@@ -13,10 +13,11 @@
 
       .border {
         width: auto;
-        max-width: 20em;
+        max-width: 25em;
         margin-top: .5em;
         margin-bottom: .5em;
         padding: .5em;
+        text-align: center;
       }
     </style>
 

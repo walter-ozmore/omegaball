@@ -68,11 +68,7 @@
         width: 100%;
         text-align: center;
         display: block;
-        background-color: unset;
-        color: white;
-      }
-      .game-selector button:hover {
-        background-color: gray;
+        /* background-color: unset; */
       }
       .wrapper {
         display: flex;
@@ -95,7 +91,8 @@
           let ele = mkEle("button", entry["title"]);
 
           ele.onclick = function() {
-            toggleHighlight(ele, selector);
+            // toggleHighlight(ele, selector);
+            ele.classList.add("selected");
             gameManager.load( entry["gameID"] );
           };
 
