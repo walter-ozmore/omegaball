@@ -31,8 +31,11 @@ function checkSelected() {
 
   var children = links.children;
   for (var child of children) {
-    if(child.innerHTML.toUpperCase() == location.toUpperCase())
-      highlight(child);
+    if(child.innerHTML.toUpperCase() == location.toUpperCase()) {
+      // highlight(child);
+      child.style.backgroundColor = "white";
+      child.style.color = "black";
+    }
   }
 }
 
