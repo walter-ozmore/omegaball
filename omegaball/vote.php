@@ -51,14 +51,14 @@
         buy.style.color = "gray";
         temp.appendChild(buy);
 
-        let x = document.createElement("INPUT");
-        x.setAttribute("type", "number");
-        x.setAttribute("min", "1");
-        x.style.display = "block";
-        x.style.marginLeft = "auto";
-        x.style.marginRight = "auto";
-        x.style.marginBottom = "1em";
-        temp.appendChild(x);
+        let inputEle = document.createElement("INPUT");
+        inputEle.setAttribute("type", "number");
+        inputEle.setAttribute("min", "1");
+        inputEle.style.display = "block";
+        inputEle.style.marginLeft = "auto";
+        inputEle.style.marginRight = "auto";
+        inputEle.style.marginBottom = "1em";
+        temp.appendChild(inputEle);
 
         let can = mkEle("button", "CANCEL");
         can.style.display = "inline";
@@ -71,6 +71,26 @@
         let cont = mkEle("button", "CONTINUE");
         cont.style.display = "inline";
         temp.appendChild(cont);
+        // When the button is clicked, grab the number of votes to be bought and
+        // call the ajax.
+        if (inputEle.value != null)
+        {
+          cont.onclick = function() {
+            let args = {numVotes : inputEle.value};
+            ajaxJson("/omegaball/ajax/update-user-votes.php", function(obj){
+              for(let code of obj){
+                // Check if the user successfully bought votes
+                if (code == 1) {
+                  alert("Not enough funds");
+                }
+                else if (code == 0) {
+                  alert("Success");
+                  closeNotification(this);
+                }
+              }
+            }, args);
+          }
+        }
       }
       function submit() {
         let noti = createNotification();

@@ -9,11 +9,11 @@
   $array = json_decode($_POST["q"], true);
 
   // Get the current user id
-  $uid = getCurrentUser();
+  $uid = getCurrentUser()["uid"];
 
   // Get the other information from the passed array
-  $voteId = array["voteId"];
-  $numVotes = array["numVotes"];
+  $voteId = $array["voteId"];
+  $numVotes = $array["numVotes"];
 
 
   // Make the query and run it
