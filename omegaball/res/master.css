@@ -61,9 +61,8 @@ h1 {
 button {
   background-color: #FFFFFF;
   color: black;
-  border: solid;
-  border-color: white;
-  border-width: 1px;
+  border: 1px solid white;
+
   text-align: center;
   text-decoration: none;
   cursor: pointer;

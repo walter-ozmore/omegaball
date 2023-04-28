@@ -1,0 +1,29 @@
+/* https://superuser.com/questions/361297/what-colour-is-the-dark-green-on-old-fashioned-green-screen-computer-displays */
+
+* {
+  border-color: #33FF00;
+  color: #33FF00;
+}
+body {
+  background-color: #282828;
+}
+
+button {
+  border: 1px solid #33FF00;
+  background: rgba(0,0,0,0);
+  color: #33FF00;
+}
+
+button:hover {
+  color: #282828;
+  background-color: #33FF00;
+}
+
+.border {
+  border-color: #33FF00;
+}
+
+.selected {
+  color: #282828;
+  background-color: #33FF00;
+}

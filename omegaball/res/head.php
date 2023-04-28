@@ -54,3 +54,12 @@
 
 <!-- Style sheets -->
 <link rel="stylesheet" href="/omegaball/res/master.css">
+<?php
+  switch(0) {
+    case 0:
+      echo '<link rel="stylesheet" href="/omegaball/res/skins/retro.css">';
+      break;
+    default:
+      echo '<link rel="stylesheet" href="/omegaball/res/skins/default.css">';
+  }
+?>

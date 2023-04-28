@@ -33,8 +33,9 @@ function checkSelected() {
   for (var child of children) {
     if(child.innerHTML.toUpperCase() == location.toUpperCase()) {
       // highlight(child);
-      child.style.backgroundColor = "white";
-      child.style.color = "black";
+      // child.style.backgroundColor = "white";
+      // child.style.color = "black";
+      child.classList.add("selected");
     }
   }
 }
