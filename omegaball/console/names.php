@@ -29,6 +29,38 @@
         var table = document.getElementById("names");
         // Loop through the data
         for (let x of obj) {
+          let eleChk = mkEle("input");
+          eleChk.setAttribute("type", "checkbox");
+          if (x["inGame"] == 1){
+            eleChk.checked = true;
+          }else{
+            eleChk.checked = false;
+          }
+
+          // -1, 1, 3
+          let elePos = mkEle("select");
+          let optionOne = mkEle("option");
+          let optionTwo = mkEle("option");
+          let optionThree = mkEle("option");
+
+          optionOne.innerHTML = "Any Name";
+          optionTwo.innerHTML = "First Name";
+          optionThree.innerHTML = "Last Name";
+
+          if (x["position"] == -1){
+            optionOne.selected = true;
+          }
+          if (x["position"] == 1){
+            optionTwo.selected = true;
+          }
+          if (x["position"] ==3){
+            optionThree.selected = true;
+          }
+
+          elePos.appendChild(optionOne);
+          elePos.appendChild(optionTwo);
+          elePos.appendChild(optionThree);
+
           // Assign the values from the row to the variables
           let playerName = x["playerName"];
           let inGame = x["inGame"];
@@ -42,8 +74,8 @@
 
           // Modify the cell's HTML
           playerNameCell.innerHTML = playerName;
-          inGameCell.innerHTML = inGame;
-          posCell.innerHTML = pos;
+          inGameCell.appendChild(eleChk);
+          posCell.appendChild(elePos);
         }
       });
     </script>
