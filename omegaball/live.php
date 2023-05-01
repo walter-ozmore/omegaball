@@ -68,6 +68,8 @@
         width: 100%;
         text-align: center;
         display: block;
+        padding-left: unset;
+        padding-right: unset;
         /* background-color: unset; */
       }
       .wrapper {
