@@ -145,7 +145,12 @@
   </header>
 
   <body>
-    <div id="controller" class="box border"></div>
-    <div id="game-window" class="border game-window"></div>
+    <div style="display: flex">
+      <div class="border">
+        <div id="game-stats"></div>
+        <div id="controller"></div>
+      </div>
+      <div id="game-window" class="border game-window"></div>
+    </div>
   </body>
 </html>

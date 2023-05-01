@@ -6,14 +6,7 @@ class GameManager {
     };
     this.clearGame(gameManager);
 
-    ajaxJson( "/omegaball/simulation/ajax.php", function(obj) {
-      if( returnFunction !== null ) returnFunction(obj);
-      // Add disclaimer that the game is not saved
-
-      for(let timeSlice of obj.game) {
-        gameManager.processTimeSlice(timeSlice, gameManager);
-      }
-    }, args );
+    ajaxJson( "/omegaball/simulation/ajax.php", this.show, args );
   }
 
 
@@ -29,11 +22,13 @@ class GameManager {
     };
     this.clearGame(gameManager);
 
-    ajaxJson( "/omegaball/simulation/ajax.php", function(obj) {
-      for(let timeSlice of obj.game) {
-        gameManager.processTimeSlice(timeSlice, gameManager);
-      }
-    }, args );
+    ajaxJson( "/omegaball/simulation/ajax.php", this.show, args );
+  }
+
+  show(obj) {
+    for(let timeSlice of obj.game) {
+      gameManager.processTimeSlice(timeSlice, gameManager);
+    }
   }
 
 

@@ -33,7 +33,6 @@
       <a href="/omegaball/test/basic-page">Basic Page</a>
       <a href="/omegaball/test/account-test">Account Test</a>
       <a href="/omegaball/test/add-game">Add Game</a>
-      <a href="/omegaball/test/game-manager">Game Manager</a>
       <a href="/omegaball/test/test-console">Test Console</a>
       <a href="/omegaball/test/view-tracker">View Tracker</a>
     </div>

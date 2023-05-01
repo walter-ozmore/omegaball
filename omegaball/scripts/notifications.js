@@ -18,6 +18,29 @@ function createNotification() {
 
 
 /**
+ * @brief Deletes the first ancestor element with the "notification" class that
+ * contains the given element.
+ *
+ * This function traverses up the document tree from the given element until it
+ * finds an element with the "notification" class, and then deletes that
+ * element. If no such element is found, this function does nothing.
+ *
+ * @param element The element to start the search from.
+ */
+function closeNotification(element) {
+  // Go up untill you find an element with the class of notification
+  let ancestor = element.parentNode;
+  while (ancestor != null) {
+    if (ancestor.classList.contains('notification')) {
+      ancestor.remove();
+      return;
+    }
+    ancestor = ancestor.parentNode;
+  }
+}
+
+
+/**
  * Check if there is any notifications that should be displayed then displays
  * the relevant notifications
  */
@@ -81,29 +104,6 @@ function notifyChampionshipWin(acronym, name, buttonText) {
     closeNotification(this);
   };
   ele.appendChild( button );
-}
-
-
-/**
- * @brief Deletes the first ancestor element with the "notification" class that
- * contains the given element.
- *
- * This function traverses up the document tree from the given element until it
- * finds an element with the "notification" class, and then deletes that
- * element. If no such element is found, this function does nothing.
- *
- * @param element The element to start the search from.
- */
-function closeNotification(element) {
-  // Go up untill you find an element with the class of notification
-  let ancestor = element.parentNode;
-  while (ancestor != null) {
-    if (ancestor.classList.contains('notification')) {
-      ancestor.remove();
-      return;
-    }
-    ancestor = ancestor.parentNode;
-  }
 }
 
 /**
