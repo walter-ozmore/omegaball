@@ -178,7 +178,7 @@
           let title = vote["title"];
 
           outDiv.appendChild( mkEle("div", title) );
-          outDiv.appendChild( mkEle("div", "<img class='vote-image' src='"+title+"'>") );
+          outDiv.appendChild( mkEle("div", "<img class='vote-image' src='"+image+"'>") );
           outDiv.appendChild( mkEle("div", description) );
 
           let voteDiv = mkEle("div");
