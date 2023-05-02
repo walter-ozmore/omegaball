@@ -70,7 +70,7 @@
         display: block;
         padding-left: unset;
         padding-right: unset;
-        /* background-color: unset; */
+        background-color: rgba(0,0,0,0);
       }
       .wrapper {
         display: flex;
