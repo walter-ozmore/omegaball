@@ -6,10 +6,10 @@
   $conn = connectDB("newOmegaball");
 
   // Decode json from vote.php into an array
-  $array = json_decode($_POST["q"], true);
+  $args = json_decode($_POST["q"], true);
 
   // Retrieve the season
-  $season = $array["season"];
+  $season = $args["season"];
 
   // Getting the required information from all votes in current season
   $query = "SELECT id, title, voteType, image, votes, description FROM Vote

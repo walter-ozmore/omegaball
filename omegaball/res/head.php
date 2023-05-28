@@ -51,6 +51,7 @@
 <script src="/omegaball/scripts/lib.js"></script>
 <script src="/omegaball/scripts/accounts.js"></script>
 <script src="/omegaball/scripts/notifications.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 
 <!-- Style sheets -->
 <link rel="stylesheet" href="/omegaball/res/master.css">
