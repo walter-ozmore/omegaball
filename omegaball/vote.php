@@ -79,15 +79,18 @@
             let args = {numVotes : inputEle.value};
             let not = this;
             ajaxJson("/omegaball/ajax/update-user-votes.php", function(obj){
-              for(let code of obj){
-                // Check if the user successfully bought votes
-                if (code == 1) {
-                  alert("Not enough funds");
-                }
-                else if (code == 0) {
-                  // alert("Success");
+              // Check if the user successfully bought votes
+              switch (obj.code){
+                case 0:
+                  Accounts.loadCurrentUser();
                   closeNotification(not);
-                }
+                  break;
+                case 1:
+                  alert("Not enough funds.");
+                  break;
+                default:
+                  alert("Unknown Error");
+                  break;
               }
             }, args);
           }
@@ -127,6 +130,9 @@
         let cont = mkEle("button", "CONTINUE");
         cont.style.display = "inline";
         temp.appendChild(cont);
+        cont.onclick = function() {
+
+        };
       }
 
       function submitVote() {
@@ -160,6 +166,30 @@
         let subButton = mkEle("button", "SUBMIT");
         subButton.style.display = "inline";
         voteNoti.appendChild(subButton);
+        if (input.value != null)
+        {
+          subButton.onclick = function() {
+            let args = {
+              numVotes : input.value,
+              VoteId : id
+            };
+            let not = this;
+            ajaxJson("/omegaball/ajax/update-votes.php", function(obj){
+              switch (obj.code){
+                case 0:
+                  Accounts.loadCurrentUser();
+                  closeNotification(not);
+                  break;
+                case 1:
+                  alert("Not enough votes.");
+                  break;
+                default:
+                  alert("Unknown Error");
+                  break;
+              }
+            }, args);
+          }
+        }
       }
       // Get votes
       // The args for the get-votes query. Change each season.
