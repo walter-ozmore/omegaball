@@ -24,6 +24,9 @@
       }
     </style>
     <script>
+      var offset = 0;
+      var pageSize = 20;
+
       ajaxJson("/omegaball/ajax/get-names.php", function(obj){
         // Grab the table
         var table = document.getElementById("names");
@@ -47,13 +50,13 @@
           optionTwo.innerHTML = "First Name";
           optionThree.innerHTML = "Last Name";
 
-          if (x["position"] == -1){
+          if (x["position"] == -1) {
             optionOne.selected = true;
           }
-          if (x["position"] == 1){
+          if (x["position"] == 1) {
             optionTwo.selected = true;
           }
-          if (x["position"] ==3){
+          if (x["position"] ==3) {
             optionThree.selected = true;
           }
 
@@ -77,7 +80,31 @@
           inGameCell.appendChild(eleChk);
           posCell.appendChild(elePos);
         }
-      });
+      }, {offset: 0});
+
+      // this function will take the new offset and 
+      // update the name table with the new offset
+      function updateTable(){
+
+      }
+
+      // offset subtracted
+      function goBack(){
+        if (offset < pageSize){
+          return;
+        }
+        offset -= pageSize;
+
+        updateTable();
+      }
+
+      // offset added
+      function goForward(){
+        offset += pageSize;
+
+         updateTable();
+      }
+
     </script>
   </head>
 
@@ -93,5 +120,8 @@
         <th>Position</th>
       </tr>
     </table>
+    </div>
+    <button onclick = "goBack()"> Back </button>
+    <button onclick = "goForward()"> Forward </button>
   </body>
 </html>
