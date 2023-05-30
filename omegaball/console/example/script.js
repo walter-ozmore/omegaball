@@ -35,7 +35,8 @@ function updateDisplay() {
   // Fetch data
   let args = {offset: offset};
   let returnFunction = function(obj) {
-    console.log(obj);
+    // Update the max page
+    pageRange[1] = obj.count;
 
     var table = $("#data");
 

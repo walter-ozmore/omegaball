@@ -2,6 +2,9 @@
   require_once realpath($_SERVER["DOCUMENT_ROOT"])."/res/secure/database.php";
   require_once realpath($_SERVER["DOCUMENT_ROOT"])."/res/lib.php";
 
+  error_reporting(E_ALL);
+  ini_set('display_errors', '1');
+
   $args = json_decode($_POST["q"], true);
 
   // Connect to database
@@ -21,10 +24,10 @@
   }
 
   // Get the max count
-  $query = "SELECT COUNT(playerName) AS numEntries FROM PlayerName";
-  $conn->query($query);
-  $row->fetch_assoc();
-  $returnObj["count"] = $row["numEntries"];
+  $query = "SELECT COUNT(playerName) AS count FROM PlayerName";
+  $result = $conn->query($query);
+  $row = $result->fetch_assoc();
+  $returnObj["count"] = $row["count"];
 
   // Convert return object to a string in a json format
   echo json_encode($returnObj);
